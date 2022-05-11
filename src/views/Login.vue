@@ -24,7 +24,30 @@
       >
       </v-text-field>
     </v-form>
+
+    <v-btn-group>
+      <v-btn
+
+          color="blue-darken-2"
+          class="text-grey-lighten-4"
+      >
+        <!--        @click="login(form)"-->
+        登录
+      </v-btn>
+      <v-btn
+          @click="$router.push('/')">
+        忘记密码
+      </v-btn>
+      <v-btn
+
+          color="green-lighten-1"
+          class="text-grey-lighten-4">
+        注册
+        <!--        @click="toRegister(form)"-->
+      </v-btn>
+    </v-btn-group>
   </div>
+
 </template>
 
 <script>
