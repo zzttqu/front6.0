@@ -1,3 +1,4 @@
+import store from '../store.js'
 export default {
     namespaced: true,
     state: {
@@ -23,11 +24,11 @@ export default {
 
 };
 
-export const Msg = (store, option) => {
+export const Msg = (option) => {
     store.dispatch("msg/showMsg", {
         text: option.message || "爱莉希雅",
         showClose: option.showClose || false,
-        timeout: option.timeout || 5000,
+        timeout: option.timeout || 2000,
         color: option.color || "blue-lighten-5"
     });
 };

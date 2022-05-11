@@ -37,9 +37,9 @@
       </v-btn-toggle>
       <v-text-field
           v-model="user.userInfo"
-          :rules="[v=>!!v||'用户名还没填哦']"
-          :label="user.method===0?'用户名':'邮箱地址'"
-          required
+          :rules="[(user.method===1?(v=>!!v||'用户名还没填哦'):(v=>/^\w+(\w|[.]\w+)+@\w+([.]\w+){1,3}/ig.test(v)||'邮箱格式有误'))]"
+          :label="user.method===0?'邮箱地址':'用户名'"
+          @change=""
       >
       </v-text-field>
       <v-text-field
@@ -47,7 +47,6 @@
           type="password"
           :rules="[v=>!!v||'需要填密码']"
           label="密码"
-          required
       >
       </v-text-field>
       <v-btn
@@ -88,10 +87,10 @@
 
 <script>
 import {reactive, ref} from "vue";
-import router from "../router";
 import request from "../utils/apiUtil";
 import useStore from "vuex/dist/vuex.mjs";
 import {Msg} from "../store/modules/msg";
+import {codeAndSend} from "../utils/encryptUtils";
 
 export default {
   name: "Login",
@@ -106,7 +105,7 @@ export default {
       method: 0
     });
     const login = uid => {
-
+      codeAndSend(uid+user.password,"/landr/login")
     };
     return {
       form,
@@ -122,8 +121,8 @@ export default {
                   login(res.uid);
                 }
                 else {
-                  Msg(useStore(), {
-                    color:"warning",
+                  Msg({
+                    color: "warning",
                     showClose: true,
                     message: "该邮箱尚未注册"
                   });
@@ -139,7 +138,7 @@ export default {
                 }
                 else {
                   Msg(useStore(), {
-                    color:"warning",
+                    color: "warning",
                     showClose: true,
                     message: "该用户名尚未注册"
                   });
@@ -147,7 +146,6 @@ export default {
               });
             }
             console.log("验证通过");
-            router.push("/");
           }
           else {
             console.log("失败");

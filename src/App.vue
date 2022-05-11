@@ -1,7 +1,7 @@
 <template>
   <v-app>
+    <MessageBar></MessageBar>
     <v-main>
-
       <router-view v-slot="{ Component }">
         <keep-alive>
           <transition
@@ -12,7 +12,6 @@
           </transition>
         </keep-alive>
       </router-view>
-
     </v-main>
   </v-app>
 </template>
@@ -24,13 +23,10 @@
 // leave-active-class="animate__slideOutDown animate__fadeOut"
 // style="position:absolute;"
 import "animate.css";
-
+import MessageBar from "./components/MessageBar/MessageBar";
 export default {
   name: "App",
-
-  data: () => ({
-    //
-  }),
+  components: {MessageBar},
 };
 </script>
 <style>
