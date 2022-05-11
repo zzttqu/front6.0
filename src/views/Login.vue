@@ -1,14 +1,14 @@
 <template>
   <div class="root">
     <div class="navBar">
-      <button @click="$router.go(-1)" style="background: none;border: none">
-        <i class="iconfont" style="font-size: 2rem">&#xe61e;</i>
+      <button @click="$router.go(-1)">
+        <i class="iconfont" >&#xe61e;</i>
       </button>
-      <button @click="$router.push('/')" style="background: none;border: none">
-        <i class="iconfont" style="font-size: 2rem">&#xe64f;</i>
+      <button @click="$router.push('/')">
+        <i class="iconfont">&#xe64f;</i>
       </button>
     </div>
-    <v-form ref="form" label-position="center" label-width="auto" class="form">
+    <v-form ref="form" class="form" v-model="user.valid">
       <v-text-field
           v-model="user.userInfo"
           :rules="[v=>!!v||'用户名还没填哦']"
@@ -23,25 +23,34 @@
           label="密码"
       >
       </v-text-field>
-    </v-form>
-
-    <v-btn-group>
       <v-btn
-
-          color="blue-darken-2"
-          class="text-grey-lighten-4"
-      >
-        <!--        @click="login(form)"-->
-        登录
-      </v-btn>
-      <v-btn
+          block
+          variant="plain"
+          size="small"
+          color="black"
+          style="margin:auto 0 auto auto;"
           @click="$router.push('/')">
         忘记密码
       </v-btn>
+    </v-form>
+    <v-btn-group
+        rounded="xl"
+        class="buttonGroup"
+        variant="outlined"
+        divided
+    >
       <v-btn
-
-          color="green-lighten-1"
-          class="text-grey-lighten-4">
+          width="8rem"
+          color="blue"
+          size="large"
+      >
+        登录
+      </v-btn>
+      <v-btn
+          size="large"
+          width="8rem"
+          color="green"
+          >
         注册
         <!--        @click="toRegister(form)"-->
       </v-btn>
@@ -59,7 +68,8 @@ export default {
   setup() {
     let user = reactive({
       userInfo: "",
-      password: ""
+      password: "",
+      valid: true
     });
     return {
       user
@@ -71,11 +81,31 @@ export default {
 
 
 <style lang="scss" scoped>
+.form {
+  margin: 8rem 2rem 0;
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  position: absolute;
+  bottom: 2rem;
+}
 
 .navBar {
   display: flex;
   justify-content: space-around;
   padding-top: 0.5rem;
+
+  button {
+    background: none;
+    border: none;
+    .iconfont{
+      color: #555;
+      font-size: 2rem;
+    }
+  }
 }
 
 .noClick {
