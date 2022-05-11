@@ -69,7 +69,7 @@
           width="8rem"
           color="blue"
           size="large"
-          @click="login(form)"
+          @click="loginValid(form)"
       >
         登录
       </v-btn>
@@ -90,6 +90,8 @@
 import {reactive, ref} from "vue";
 import router from "../router";
 import request from "../utils/apiUtil";
+import useStore from "vuex/dist/vuex.mjs";
+import {Msg} from "../store/modules/msg";
 
 export default {
   name: "Login",
@@ -103,11 +105,13 @@ export default {
       valid: true,
       method: 0
     });
+    const login = uid => {
 
+    };
     return {
       form,
       user,
-      login(form) {
+      loginValid(form) {
         form.validate().then(res => {
           if (res.valid) {
             if (user.method === 0) {
@@ -115,7 +119,30 @@ export default {
                 email: user.userInfo,
               }).then(res => {
                 if (res.uid !== null) {
-
+                  login(res.uid);
+                }
+                else {
+                  Msg(useStore(), {
+                    color:"warning",
+                    showClose: true,
+                    message: "该邮箱尚未注册"
+                  });
+                }
+              });
+            }
+            else if (user.method === 1) {
+              request.post("/landr", {
+                username: user.userInfo,
+              }).then(res => {
+                if (res.uid !== null) {
+                  login(res.uid);
+                }
+                else {
+                  Msg(useStore(), {
+                    color:"warning",
+                    showClose: true,
+                    message: "该用户名尚未注册"
+                  });
                 }
               });
             }
@@ -128,7 +155,8 @@ export default {
             user.userInfo = "";
           }
         });
-      }
+      },
+
     };
   }
 }
