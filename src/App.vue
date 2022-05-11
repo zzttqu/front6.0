@@ -1,15 +1,18 @@
 <template>
   <v-app>
     <v-main>
-      <router-view v-slot="{ Component }">
-        <transition
-            appear
 
-        >
-<!--          name="rootAnimate"-->
-          <component :is="Component"/>
-        </transition>
+      <router-view v-slot="{ Component }">
+        <keep-alive>
+          <transition
+              appear
+          >
+            <!--          name="rootAnimate"-->
+            <component :is="Component"/>
+          </transition>
+        </keep-alive>
       </router-view>
+
     </v-main>
   </v-app>
 </template>
@@ -20,20 +23,22 @@
 // enter-active-class="animate__slideInDown animate__fadeIn"
 // leave-active-class="animate__slideOutDown animate__fadeOut"
 // style="position:absolute;"
-import 'animate.css';
+import "animate.css";
+
 export default {
-  name: 'App',
+  name: "App",
 
   data: () => ({
     //
   }),
-}
+};
 </script>
 <style>
 .rootAnimate-enter-active {
   position: absolute;
   animation: slideIn 1s;
 }
+
 .rootAnimate-leave-active {
   position: absolute;
   animation: slideOut 1s;
@@ -47,6 +52,7 @@ export default {
     top: 0;
   }
 }
+
 @keyframes slideOut {
   from {
     top: 0;
@@ -55,7 +61,8 @@ export default {
     top: -100vh;
   }
 }
-:root{
+
+:root {
   font-size: 20px;
 }
 </style>

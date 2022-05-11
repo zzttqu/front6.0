@@ -78,10 +78,10 @@ request.interceptors.response.use(response => {
     else {
         error.code = error.response.status;
         if (error.code === "ECONNABORTED" && error.message.indexOf("timeout") !== -1) {
-            ElMessage.warning("请求超时");
+
         }
         else if (error.message === "Network Error") {
-            ElMessage.error("网络连接异常，请重试");
+
         }
         else if (error.code === 401) {
             Msg(store,{
