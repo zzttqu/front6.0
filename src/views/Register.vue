@@ -9,13 +9,12 @@
       </button>
     </div>
     <v-form
+        ref="form"
         class="form"
-        v-model="user.valid"
         lazy-validation
     >
       <v-btn-toggle
-          v-model="user.method"
-          class="loginMethod"
+          class="registerMethod"
           disabled
       >
         <v-btn
@@ -37,28 +36,48 @@
       </v-btn-toggle>
       <v-text-field
           clearable
-          v-model="user.userInfo"
-          :label="user.method===0?'邮箱地址':'手机号'"
-          :rules="[ (v => (/^\w+(\w|[.]\w+)+@\w+([.]\w+){1,3}/ig.test(v))||'格式不对' )]"
+          v-model="user.email"
+          label="邮箱地址"
+          hint="例如：1161085395@qq.com"
+          :rules="[ (v => (/^\w+(\w|[.]\w+)+@\w+([.]\w+){1,3}/ig.test(v))||'邮箱地址格式不对' )]"
+      >
+      </v-text-field>
+      <v-text-field
+          clearable
+          v-model="user.username"
+          counter="10"
+          maxlength="10"
+          label="用户名"
       >
       </v-text-field>
       <v-text-field
           v-model="user.password"
           type="password"
           label="密码"
+          :rules="[(!user.userInfoCheck?true:v=>!!v||'密码还没填')]"
+          maxlength="30"
           clearable
       >
       </v-text-field>
       <v-text-field
-          v-model="user.password"
+          v-model="user.tmpPassword"
           type="password"
-          label="再输一次密码"
+          label="重复密码"
+          :rules="[v=>(v===user.password)||'两次输入的密码不同哦']"
+          maxlength="30"
           clearable
       >
       </v-text-field>
-      <v-text-field label="验证码" clearable single-line>
+      <v-text-field
+          label="验证码"
+          clearable
+          counter="6"
+          maxlength="6"
+          :rules="[(!user.userInfoCheck?true:v=>!!v||'验证码还没填')]"
+          v-model="user.validateCode"
+      >
         <template v-slot:append>
-          <v-btn size="small" variant="outlined">
+          <v-btn size="small" variant="outlined" @click="registerValid(form)">
             获取验证码
           </v-btn>
         </template>
@@ -70,7 +89,8 @@
           width="10rem"
           color="success"
           rounded="lg"
-          @click="$router.push('/')"
+          @click="register(form)"
+          :disabled="!user.userInfoCheck"
       >
         注册
       </v-btn>
@@ -83,7 +103,7 @@
 import {reactive, ref} from "vue";
 import request from "../utils/apiUtil";
 import {Msg} from "../store/modules/msg";
-import {codeAndSend} from "../utils/encryptUtils";
+import {encrypt} from "../utils/encryptUtils";
 import router from "../router";
 import {useRoute} from "vue-router";
 import {useStore} from "vuex";
@@ -106,98 +126,144 @@ export default {
       });
     }
     let user = reactive({
-      userInfo: "",
+      email: "",
+      username: "",
       password: "",
-      valid: true,
-      method: 0
+      tmpPassword: "",
+      validateCode: "",
+      userKey: "",
+      notCode: true,
+      userInfoCheck: false
     });
-    const login = uid => {
-      codeAndSend(uid + user.password, "/landr/login")
-          .then(res => {
-            {
-              if (res === 0) {
-                Msg({
-                  showClose: true,
-                  message: "密码错误",
-                });
-              }
-              else if (res === -1) {
-                Msg({
-                  showClose: true,
-                  message: "账号已被封禁",
-                });
-              }
-              else {
-                store.dispatch("setUserStatus", {
-                  uid: res.uid,
-                  isLogin: true,
-                  username: res.username,
-                  likes: res.likes
-                });
-                Msg({
-                  showClose: true,
-                  message: `欢迎 ${res.username} ,正在跳转...`,
-                  timeout: 1000,
-                });
 
-                setTimeout(() => {
-                  router.push(nextUrl);
-                  nextUrl = "/main";
-                }, 1000);
-              }
-            }
+    const code = () => {
+      user.notCode = false;//每十分钟只允许发送一次
+      //user.userInfoCheck = true;//用户名和邮箱验证通过，且发送了验证码
+      Msg({
+        color: "success",
+        showClose: true,
+        message: "验证码发送中，请稍等...",
+        timeout: 1500
+      });
+      setTimeout(() => {
+        user.notCode = true;
+        user.userInfoCheck = false;
+      }, 1000 * 60 * 5);
+      //验证通过后向后端发送验证码，成功后弹窗
+      request.get("/landr/code", {
+        params: {
+          email: user.email,
+          method: 1
+        },
+        timeout: 30 * 1000
+      }).then(res => {
+        if (res === 1) {
+          user.userInfoCheck = true;
+          Msg({
+            color: "success",
+            showClose: true,
+            message: "验证码已发出，5分钟内有效",
           });
-
+        }
+        else if (res === 0) {
+          user.notCode = true;
+          Msg({
+            color: "info",
+            showClose: true,
+            message: "刚才的验证码还有效哦",
+          });
+        }
+      });
+      return true;
     };
     return {
       router,
       form,
       user,
-      loginValid(form) {
+      registerValid(form) {
         form.validate().then(res => {
           if (res.valid) {
-            if (user.method === 0) {
-              request.post("/landr", {
-                email: user.userInfo,
-              }).then(res => {
-                if (res.uid !== null) {
-                  login(res.uid);
-                }
-                else {
-                  Msg({
-                    color: "warning",
-                    showClose: true,
-                    message: "该邮箱尚未注册"
-                  });
-                }
-              });
-            }
-            else if (user.method === 1) {
-              request.post("/landr", {
-                username: user.userInfo,
-              }).then(res => {
-                if (res.uid !== null) {
-                  login(res.uid);
-                }
-                else {
-                  Msg(useStore(), {
-                    color: "warning",
-                    showClose: true,
-                    message: "该用户名尚未注册"
-                  });
-                }
-              });
-            }
-            console.log("验证通过");
+            request.post("/landr", {
+              email: user.email,
+              username: user.username
+            }).then(res => {
+              if (res.uid === null) {
+                code();
+              }
+              else if (res.email === null) {
+                Msg({
+                  color: "info",
+                  showClose: true,
+                  message: "该邮箱已被注册"
+                });
+              }
+              else if (res.username === null) {
+                Msg({
+                  color: "info",
+                  showClose: true,
+                  message: "该用户名已被注册"
+                });
+              }
+            });
           }
           else {
-            console.log("失败");
             user.password = "";
             user.userInfo = "";
           }
         });
       },
-
+      register(form) {
+        form.validate().then(res => {
+          if (res.valid) {
+            if (user.userInfoCheck) {
+              request.post("/landr/code", {
+                email: user.email,
+                code: user.validateCode,
+              }).then(res => {
+                if (res === 1) {
+                  return true;
+                }
+                else {
+                  Msg(store, {
+                    showClose: true,
+                    message: "验证码输入错误",
+                    color: "warning",
+                  });
+                  user.validateCode = "";
+                  return false;
+                }
+              }).then(()=> {
+                user.userKey = encrypt(user.password);
+                return request.post("/landr/register", {
+                  username: user.username,
+                  email: user.email,
+                  userKey: user.userKey,
+                });
+              }).then(res => {
+                if (res.uid !== null) {
+                  Msg({
+                    showClose: true,
+                    message: "注册成功，正在跳转",
+                    color: "success",
+                  });
+                }
+              });
+            }
+            else {
+              Msg({
+                message: "验证码还获取呢",
+                color: "info"
+              });
+            }
+          }
+          else {
+            Msg({
+              message: "资料还没填完呢",
+              color: "warning"
+            });
+          }
+        });
+      }
     };
   }
 }
@@ -207,11 +273,12 @@ export default {
 
 <style lang="scss" scoped>
 .form {
-  .loginMethod {
+  .registerMethod {
     margin: 0.5rem auto;
     display: flex;
     justify-content: center;
     height: 1.5rem;
+    opacity: 0.3;
   }
 
   margin: 1rem auto 0;

@@ -15,7 +15,7 @@
     >
       <v-btn-toggle
           v-model="user.method"
-          class="loginMethod"
+          class="registerMethod"
       >
         <v-btn
             class="text-grey-darken-4"
@@ -78,7 +78,6 @@
           @click="$router.push('/register')"
       >
         注册
-        <!--        -->
       </v-btn>
     </v-btn-group>
   </div>
@@ -226,7 +225,7 @@ export default {
 <style lang="scss" scoped>
 
 .form {
-  .loginMethod {
+  .registerMethod {
     margin: 0.5rem auto;
     display: flex;
     justify-content: center;

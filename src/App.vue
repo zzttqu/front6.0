@@ -15,7 +15,7 @@
 </template>
 
 <script>
-//失败的使用animate的
+//失败的使用animate的    name="rootAnimate"
 // class="animate__animated"
 // enter-active-class="animate__slideInDown animate__fadeIn"
 // leave-active-class="animate__slideOutDown animate__fadeOut"
