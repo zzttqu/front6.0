@@ -76,6 +76,7 @@
           size="large"
           width="8rem"
           color="green"
+          @click="$router.push('/')"
       >
         注册
         <!--        @click="toRegister(form)"-->
@@ -88,9 +89,11 @@
 <script>
 import {reactive, ref} from "vue";
 import request from "../utils/apiUtil";
-import useStore from "vuex/dist/vuex.mjs";
 import {Msg} from "../store/modules/msg";
 import {codeAndSend} from "../utils/encryptUtils";
+import router from "../router";
+import {useRoute} from "vue-router";
+import {useStore} from "vuex";
 
 export default {
   name: "Login",
@@ -98,6 +101,17 @@ export default {
   methods: {},
   setup() {
     const form = ref();
+    const store = useStore();
+    const route = useRoute();
+    let nextUrl;
+    if (route.query.url) {
+      nextUrl = route.query.url;
+      Msg({
+        showClose: true,
+        message: "请先登录哦！",
+        color: "info"
+      });
+    }
     let user = reactive({
       userInfo: "",
       password: "",
@@ -105,9 +119,45 @@ export default {
       method: 0
     });
     const login = uid => {
-      codeAndSend(uid+user.password,"/landr/login")
+      codeAndSend(uid + user.password, "/landr/login")
+          .then(res => {
+            {
+              if (res === 0) {
+                Msg({
+                  showClose: true,
+                  message: "密码错误",
+                });
+              }
+              else if (res === -1) {
+                Msg({
+                  showClose: true,
+                  message: "账号已被封禁",
+                });
+              }
+              else {
+                store.dispatch("setUserStatus", {
+                  uid: res.uid,
+                  isLogin: true,
+                  username: res.username,
+                  likes: res.likes
+                });
+                Msg({
+                  showClose: true,
+                  message: `欢迎 ${res.username} ,正在跳转...`,
+                  timeout: 1000,
+                });
+
+                setTimeout(() => {
+                  router.push(nextUrl);
+                  nextUrl = "/main";
+                }, 1000);
+              }
+            }
+          });
+
     };
     return {
+      router,
       form,
       user,
       loginValid(form) {
@@ -163,6 +213,7 @@ export default {
 
 
 <style lang="scss" scoped>
+
 .form {
   .loginMethod {
     margin: 0.5rem auto;
@@ -179,8 +230,7 @@ export default {
   display: flex;
   justify-content: center;
   width: 100%;
-  position: absolute;
-  bottom: 2rem;
+
 }
 
 .navBar {

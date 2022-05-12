@@ -52,14 +52,12 @@ export default {
   justify-content: space-around;
   align-items: center;
   padding: 0 10%;
-  width: 100%;
-  height: 100%;
 }
 
 .footer {
   position: absolute;
   bottom: 10px;
   right: 50px;
-  color: #fff;
+  color: #222;
 }
 </style>
