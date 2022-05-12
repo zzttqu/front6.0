@@ -9,13 +9,14 @@
       </button>
     </div>
     <v-form
-        ref="form"
         class="form"
+        v-model="user.valid"
         lazy-validation
     >
       <v-btn-toggle
           v-model="user.method"
           class="loginMethod"
+          disabled
       >
         <v-btn
             class="text-grey-darken-4"
@@ -23,7 +24,7 @@
             color="grey-lighten-2"
             width="5rem"
         >
-          邮箱登录
+          邮箱注册
         </v-btn>
         <v-btn
             class="text-grey-darken-4"
@@ -31,62 +32,55 @@
             color="grey-lighten-2"
             width="5rem"
         >
-          用户名登录
+          手机注册
         </v-btn>
       </v-btn-toggle>
       <v-text-field
+          clearable
           v-model="user.userInfo"
-          :rules="infoRules"
-          :label="user.method===0?'邮箱地址':'用户名'"
+          :label="user.method===0?'邮箱地址':'手机号'"
+          :rules="[ (v => (/^\w+(\w|[.]\w+)+@\w+([.]\w+){1,3}/ig.test(v))||'格式不对' )]"
       >
       </v-text-field>
       <v-text-field
           v-model="user.password"
           type="password"
           label="密码"
-          required
+          clearable
       >
       </v-text-field>
-
-      <v-btn
-          block
-          variant="plain"
-          size="small"
-          color="black"
-          @click="$router.push('/')">
-        忘记密码
-      </v-btn>
-    </v-form>
-    <v-btn-group
-        rounded="xl"
-        class="buttonGroup"
-        variant="outlined"
-        divided
-    >
-      <v-btn
-          width="8rem"
-          color="blue"
-          size="large"
-          @click="loginValid(form)"
+      <v-text-field
+          v-model="user.password"
+          type="password"
+          label="再输一次密码"
+          clearable
       >
-        登录
-      </v-btn>
+      </v-text-field>
+      <v-text-field label="验证码" clearable single-line>
+        <template v-slot:append>
+          <v-btn size="small" variant="outlined">
+            获取验证码
+          </v-btn>
+        </template>
+      </v-text-field>
+    </v-form>
+    <div class="buttonGroup">
       <v-btn
           size="large"
-          width="8rem"
-          color="green"
-          @click="$router.push('/register')"
+          width="10rem"
+          color="success"
+          rounded="lg"
+          @click="$router.push('/')"
       >
         注册
-        <!--        -->
       </v-btn>
-    </v-btn-group>
+    </div>
   </div>
 
 </template>
 
 <script>
-import {onMounted, reactive, ref} from "vue";
+import {reactive, ref} from "vue";
 import request from "../utils/apiUtil";
 import {Msg} from "../store/modules/msg";
 import {codeAndSend} from "../utils/encryptUtils";
@@ -95,17 +89,9 @@ import {useRoute} from "vue-router";
 import {useStore} from "vuex";
 
 export default {
-  name: "Login",
+  name: "Register",
   components: {},
   methods: {},
-  // data:()=>({
-  //   user:{
-  //     userInfo: "",
-  //     password: "",
-  //     valid: true,
-  //     method: 0
-  //   }
-  // }),
   setup() {
     const form = ref();
     const store = useStore();
@@ -119,15 +105,12 @@ export default {
         color: "info"
       });
     }
-    onMounted(() => {
-      user.a = true;
-    });
     let user = reactive({
       userInfo: "",
       password: "",
-      method: 0,
+      valid: true,
+      method: 0
     });
-    const infoRules = [(user.method === 1 ? (v => !!v || "用户名还没填哦") : (v => /^\w+(\w|[.]\w+)+@\w+([.]\w+){1,3}/ig.test(v) || "邮箱格式有误"))];
     const login = uid => {
       codeAndSend(uid + user.password, "/landr/login")
           .then(res => {
@@ -167,7 +150,6 @@ export default {
 
     };
     return {
-      infoRules,
       router,
       form,
       user,
@@ -224,7 +206,6 @@ export default {
 
 
 <style lang="scss" scoped>
-
 .form {
   .loginMethod {
     margin: 0.5rem auto;
@@ -233,7 +214,7 @@ export default {
     height: 1.5rem;
   }
 
-  margin: 5rem auto;
+  margin: 1rem auto 0;
   width: 15rem;
 }
 

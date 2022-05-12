@@ -3,14 +3,12 @@
     <MessageBar></MessageBar>
     <v-main class="main">
       <router-view v-slot="{ Component }">
-        <keep-alive>
           <transition
               appear
               name="rootAnimate"
           >
             <component :is="Component"/>
           </transition>
-        </keep-alive>
       </router-view>
     </v-main>
   </v-app>
@@ -30,11 +28,11 @@ export default {
   components: {MessageBar},
 };
 </script>
-<style>
+<style lang="scss">
 .rootAnimate-enter-active,
 .rootAnimate-leave-active {
   position: absolute;
-  transition: all 0.5s ease;
+  transition: all 0.4s ease;
   pointer-events: none;
 }
 
@@ -42,27 +40,37 @@ export default {
 .rootAnimate-leave-to {
   opacity: 0;
 }
+.rootAnimate-enter-active {
+  position: absolute;
+  animation: slideIn 1s;
+}
 
-/*@keyframes slideIn {*/
-/*  from {*/
-/*    top: 100vh;*/
-/*  }*/
-/*  to {*/
-/*    top: 0;*/
-/*  }*/
-/*}*/
+.rootAnimate-leave-active {
+  position: absolute;
+  animation: slideOut 1s;
+}
 
-/*@keyframes slideOut {*/
-/*  from {*/
-/*    top: 0;*/
-/*  }*/
-/*  to {*/
-/*    top: -100vh;*/
-/*  }*/
-/*}*/
+@keyframes slideIn {
+  from {
+    top: 100vh;
+  }
+  to {
+    top: 0;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    top: 0;
+  }
+  to {
+    top: -100vh;
+  }
+}
 .root {
   width: 100%;
   height: 100%;
+  overflow-y: hidden;
 }
 
 :root {
