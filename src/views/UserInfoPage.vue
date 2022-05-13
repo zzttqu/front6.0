@@ -1,6 +1,16 @@
 <template>
-  <div class="root">
-    <div>
+  <div>
+    <v-navigation-drawer
+        v-model="drawer"
+        bottom
+        temporary
+    >
+      <v-list
+          :items="items"
+      ></v-list>
+    </v-navigation-drawer>
+    <div class="root">
+
       <div class="basicInfo">
         <div class="avatar">
           <button style="background: none;border: none" @click="">
@@ -49,22 +59,58 @@
           换个名字
         </v-btn>
       </v-btn-group>
-      <div>
-        我是签到列表
-      </div>
-      <div>
-        我是任务列表
-      </div>
-      <div>
+      <SigninBar>
+      </SigninBar>
+      <TaskList>
+      </TaskList>
+      <v-btn
+          color="warning"
+          class="logout"
+          rounded="xl"
+          @click="drawer=!drawer"
+      >
         我是注销按钮
-      </div>
+      </v-btn>
     </div>
   </div>
 </template>
 
 <script>
+import SigninBar from "../components/UserInfoPage/SigninBar";
+import TaskList from "../components/UserInfoPage/TaskList";
+import {ref} from "vue";
+
 export default {
-  name: "UserInfoPage"
+  name: "UserInfoPage",
+  components: {
+    SigninBar,
+    TaskList,
+  },
+  setup() {
+    let drawer = ref();
+    let items = ref([
+      {
+        title: "Foo",
+        value: "foo",
+      },
+      {
+        title: "Bar",
+        value: "bar",
+      },
+      {
+        title: "Fizz",
+        value: "fizz",
+      },
+      {
+        title: "Buzz",
+        value: "buzz",
+      },
+    ],);
+    return {
+      drawer,
+      items
+    };
+  }
 };
 </script>
 
@@ -121,8 +167,16 @@ export default {
     position: relative;
   }
 }
-.changeOption{
-  margin: 1rem 0;
+
+.changeOption {
+  margin: 0.5rem 0;
   height: 2rem;
+}
+
+.logout {
+  position: absolute;
+  left: 10%;
+  bottom: 1rem;
+  width: 80%;
 }
 </style>

@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name: "SigninBar"
+  name: "Header"
 };
 </script>
 
