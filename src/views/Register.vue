@@ -77,7 +77,11 @@
           v-model="user.validateCode"
       >
         <template v-slot:append>
-          <v-btn size="small" variant="outlined" @click="registerValid(form)">
+          <v-btn
+              size="small"
+              variant="outlined"
+              @click="registerValid(form)"
+          >
             获取验证码
           </v-btn>
         </template>
@@ -138,6 +142,7 @@ export default {
 
     const code = () => {
       user.notCode = false;//每十分钟只允许发送一次
+      user.codeSend=true;
       //user.userInfoCheck = true;//用户名和邮箱验证通过，且发送了验证码
       Msg({
         color: "success",
@@ -159,6 +164,7 @@ export default {
       }).then(res => {
         if (res === 1) {
           user.userInfoCheck = true;
+          user.codeSending=true;
           Msg({
             color: "success",
             showClose: true,
