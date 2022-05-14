@@ -1,14 +1,34 @@
 <template>
   <v-app>
     <MessageBar></MessageBar>
+    <v-navigation-drawer
+        v-model="drawer"
+        temporary
+    >
+      <v-list
+
+      >
+<!--        :items="items"-->
+        <v-list-item
+            to="/"
+        >
+          123
+        </v-list-item>
+        <v-list-item
+            to="/"
+        >
+          123
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
     <v-main class="main">
       <router-view v-slot="{ Component }">
-          <transition
-              appear
-              name="rootAnimate"
-          >
-            <component :is="Component"/>
-          </transition>
+        <transition
+            appear
+            name="rootAnimate"
+        >
+          <component :is="Component"/>
+        </transition>
       </router-view>
     </v-main>
   </v-app>
@@ -22,10 +42,41 @@
 // style="position:absolute;"
 import "animate.css";
 import MessageBar from "./components/MessageBar/MessageBar";
+import {provide, ref} from "vue";
 
 export default {
   name: "App",
   components: {MessageBar},
+  setup() {
+    let drawer = ref(false);
+    let items = ref([
+      {
+        title: "Foo",
+        value: "foo",
+        open: ""
+      },
+      {
+        title: "Bar",
+        value: "bar",
+      },
+      {
+        title: "Fizz",
+        value: "fizz",
+      },
+      {
+        title: "Buzz",
+        value: "buzz",
+      },
+    ],);
+    const showDrawer = () => {
+      drawer.value = !drawer.value;
+    };
+    provide("showDrawer", showDrawer);
+    return {
+      drawer,
+      items
+    };
+  }
 };
 </script>
 <style lang="scss">
@@ -40,6 +91,7 @@ export default {
 .rootAnimate-leave-to {
   opacity: 0;
 }
+
 .rootAnimate-enter-active {
   position: absolute;
   animation: slideIn 1s;
@@ -67,6 +119,7 @@ export default {
     top: -100vh;
   }
 }
+
 .root {
   width: 100%;
   height: 100%;

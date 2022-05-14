@@ -1,16 +1,6 @@
 <template>
-  <div>
-    <v-navigation-drawer
-        v-model="drawer"
-        bottom
-        temporary
-    >
-      <v-list
-          :items="items"
-      ></v-list>
-    </v-navigation-drawer>
     <div class="root">
-
+      <Header icon-color="text-blue"></Header>
       <div class="basicInfo">
         <div class="avatar">
           <button style="background: none;border: none" @click="">
@@ -72,19 +62,20 @@
         我是注销按钮
       </v-btn>
     </div>
-  </div>
 </template>
 
 <script>
 import SigninBar from "../components/UserInfoPage/SigninBar";
 import TaskList from "../components/UserInfoPage/TaskList";
 import {ref} from "vue";
+import Header from "../components/Header";
 
 export default {
   name: "UserInfoPage",
   components: {
     SigninBar,
     TaskList,
+    Header,
   },
   setup() {
     let drawer = ref();
@@ -117,6 +108,7 @@ export default {
 <style scoped lang="scss">
 .root {
   padding: 0 1rem;
+  height: 100%;
 }
 
 .basicInfo {
