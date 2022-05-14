@@ -1,0 +1,99 @@
+<svg id="图层_1" data-name="图层 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     viewBox="0 0 1024 1024">
+    <defs>
+        <style>
+            .cls-1{fill:#fff;}.cls-1,.cls-11,.cls-3,.cls-6,.cls-7{fill-rule:evenodd;}.cls-2{fill:url(#未命名的渐变_5);}.cls-3{fill:#f4f9ff;}.cls-4{mask:url(#mask);}.cls-5,.cls-7{fill:#9abdff;}.cls-6{fill:#3677ff;}.cls-8{fill:url(#未命名的渐变_2);}.cls-9{fill:url(#未命名的渐变_3);}.cls-10{fill:url(#未命名的渐变_4);}.cls-11{fill:#e9f1ff;}.cls-12{fill:url(#未命名的渐变_5-2);}
+        </style>
+        <linearGradient id="未命名的渐变_5" x1="4.47" y1="1015.51" x2="4.47" y2="1013.47"
+                        gradientTransform="matrix(138.38, 0, 0, -27.1, -109.38, 27782.6)"
+                        gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#619bff"/>
+            <stop offset="1" stop-color="#3375ff"/>
+        </linearGradient>
+        <mask id="mask" x="402.56" y="283.37" width="217.53" height="130.73" maskUnits="userSpaceOnUse">
+            <g id="mask-3">
+                <polygon id="path-2" class="cls-1"
+                         points="402.56 283.37 620.09 283.37 620.09 348.94 511.33 414.09 402.56 348.94 402.56 283.37"/>
+            </g>
+        </mask>
+        <linearGradient id="未命名的渐变_2" x1="3.77" y1="1023.32" x2="3.77" y2="1021.27"
+                        gradientTransform="matrix(181.14, 0, 0, -181.14, -173.14, 185713.45)"
+                        gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#e7f0ff"/>
+            <stop offset="1" stop-color="#6295ff"/>
+        </linearGradient>
+        <linearGradient id="未命名的渐变_3" x1="4.22" y1="1022.89" x2="4.22" y2="1020.84"
+                        gradientTransform="matrix(151.36, 0, 0, -151.36, -128.47, 155207.67)"
+                        gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#3375ff"/>
+            <stop offset="1" stop-color="#d8e6ff"/>
+        </linearGradient>
+        <linearGradient id="未命名的渐变_4" x1="4.51" y1="1022.6" x2="4.51" y2="1020.55"
+                        gradientTransform="matrix(136.47, 0, 0, -136.47, -106.14, 139954.78)"
+                        gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#94bcff"/>
+            <stop offset="1" stop-color="#3375ff"/>
+        </linearGradient>
+        <linearGradient id="未命名的渐变_5-2" x1="30.96" y1="996.91" x2="30.96" y2="994.86"
+                        gradientTransform="matrix(14, 0, 0, -14, 79, 14481)" xlink:href="#未命名的渐变_5"/>
+    </defs>
+    <g id="页面-1">
+        <g id="_3" data-name="3">
+            <g id="编组-9">
+                <rect id="矩形" class="cls-2" x="367.15" y="258.14" width="283.3" height="55.49" rx="3.28"/>
+                <g id="编组-5">
+                    <g id="矩形-2" data-name="矩形">
+                        <polygon id="path-2-5" data-name="path-2" class="cls-3"
+                                 points="402.56 283.37 620.09 283.37 620.09 348.94 511.33 414.09 402.56 348.94 402.56 283.37"/>
+                    </g>
+                    <g class="cls-4">
+                        <rect id="矩形-3" data-name="矩形" class="cls-5" x="402.56" y="283.37" width="20.24"
+                              height="80.71"/>
+                    </g>
+                    <g class="cls-4">
+                        <rect id="矩形-4" data-name="矩形" class="cls-5" x="432.91" y="283.37" width="10.12" height="90.8"/>
+                    </g>
+                    <g class="cls-4">
+                        <rect id="矩形-5" data-name="矩形" class="cls-5" x="579.62" y="283.37" width="10.12" height="90.8"/>
+                    </g>
+                    <g class="cls-4">
+                        <rect id="矩形-6" data-name="矩形" class="cls-5" x="599.86" y="283.37" width="20.24"
+                              height="80.71"/>
+                    </g>
+                </g>
+            </g>
+            <g id="编组-18">
+                <polygon id="多边形" class="cls-6"
+                         points="713.51 471.07 636.51 708.05 387.36 708.05 310.37 471.07 511.94 324.62 713.51 471.07"/>
+                <polygon id="多边形-2" data-name="多边形" class="cls-7"
+                         points="530.69 530.48 387.36 708.05 348.87 589.56 530.69 530.48"/>
+                <polygon id="多边形-3" data-name="多边形" class="cls-7"
+                         points="530.69 530.48 635.37 709.37 524.35 709.37 530.69 530.48"/>
+                <polygon id="多边形-4" data-name="多边形" class="cls-7"
+                         points="530.69 530.48 713.63 471.28 678.76 578.6 530.69 530.48"/>
+                <polygon id="多边形-5" data-name="多边形" class="cls-7"
+                         points="530.69 530.48 511.94 324.62 622.1 404.66 530.69 530.48"/>
+                <polygon id="多边形-6" data-name="多边形" class="cls-7"
+                         points="530.78 530.61 310.37 471.07 426.32 386.82 530.78 530.61"/>
+            </g>
+            <circle id="椭圆形" class="cls-8" cx="509.57" cy="535.69" r="185.42"/>
+            <circle id="椭圆形-2" data-name="椭圆形" class="cls-9" cx="509.57" cy="535.69" r="154.94"/>
+            <circle id="椭圆形-3" data-name="椭圆形" class="cls-10" cx="509.57" cy="535.69" r="139.7"/>
+            <polygon id="星形" class="cls-1"
+                     points="513.52 588.26 464.9 623.85 471.42 563.95 416.28 539.64 471.42 515.33 464.9 455.42 513.52 491.02 562.15 455.42 555.63 515.33 610.77 539.64 555.63 563.95 562.15 623.85 513.52 588.26"/>
+            <polygon id="星形-2" data-name="星形" class="cls-11"
+                     points="513.92 537.91 471.42 515.33 464.9 455.42 513.92 537.91"/>
+            <polygon id="星形-3" data-name="星形" class="cls-11"
+                     points="509.43 539.64 471.42 563.95 416.28 539.64 509.43 539.64"/>
+            <polygon id="星形-4" data-name="星形" class="cls-11"
+                     points="513.92 539.96 513.52 588.26 464.9 623.85 513.92 539.96"/>
+            <polygon id="星形-5" data-name="星形" class="cls-11"
+                     points="513.92 537.91 555.63 563.95 562.15 623.85 513.92 537.91"/>
+            <polygon id="星形-6" data-name="星形" class="cls-11"
+                     points="515.57 539.64 555.63 515.33 610.77 539.64 515.57 539.64"/>
+            <polygon id="星形-7" data-name="星形" class="cls-11"
+                     points="513.92 537.91 513.52 491.02 562.15 455.42 513.92 537.91"/>
+            <circle id="椭圆形-4" data-name="椭圆形" class="cls-12" cx="512.5" cy="538.61" r="14.33"/>
+        </g>
+    </g>
+</svg>
