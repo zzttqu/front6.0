@@ -8,14 +8,13 @@
     <v-list
         width="10rem"
     >
-      <!--        :items="items"-->
       <v-list-item
           to="/"
       >
         首页
       </v-list-item>
       <v-list-item
-          to="/test"
+          to="/bbs"
       >
         留言板
       </v-list-item>
@@ -58,10 +57,8 @@
         </div>
       </div>
       <v-btn
-          color="warning"
-          variant="contained-flat"
+          variant="text"
           @click=""
-          disabled
           size="small"
       >
         注销登录
@@ -75,7 +72,7 @@ import {ref} from "vue";
 
 export default {
   name: "NavigationDrawer",
-  setup(props) {
+  setup() {
     let drawer = ref(false);
     const showDrawer = () => {
       drawer.value = !drawer.value;

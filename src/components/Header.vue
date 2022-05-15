@@ -31,6 +31,7 @@ export default {
 
 <style scoped lang="scss">
 .header {
+  width: 100%;
   height: 2rem;
   margin: 0.5rem 0;
   display: flex;

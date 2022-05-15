@@ -63,7 +63,7 @@ export default {
 .rootAnimate-enter-active,
 .rootAnimate-leave-active {
   position: absolute;
-  transition: all 0.4s ease;
+  transition: all 0.3s ease;
   pointer-events: none;
 }
 

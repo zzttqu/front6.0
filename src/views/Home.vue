@@ -2,7 +2,7 @@
   <div class="root">
     <div class="title">
       <i class="iconfont icon-bubble"></i>
-      油豆腐树洞
+      都有
     </div>
     <v-btn
         @click="$router.push('/login')"
