@@ -18,8 +18,12 @@ const routes = [
     component:()=>import("../views/Register.vue")
   },
   {
-    path:'/test',
+    path:'/user',
     component:()=>import('../views/UserInfoPage.vue')
+  },
+  {
+    path:'/test',
+    component:()=>import('../views/TEST.vue')
   }
 ]
 

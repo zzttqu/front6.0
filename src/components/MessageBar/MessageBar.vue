@@ -26,10 +26,8 @@ import {useStore} from "vuex";
 
 export default {
   name: "MessageBar",
-  created() {
-
-  },
-  setup() {
+  props:['option'],
+  setup(props) {
     const store = useStore();
     store.subscribe((mutation, state) => {
       if (mutation.type === "msg/showMsg") {

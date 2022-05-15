@@ -3,9 +3,6 @@
     <v-btn @click="showDrawer">
       <i :class="'iconfont icon-menu '+iconColor"></i>
     </v-btn>
-    <v-btn @click="$router.push('/user')">
-      <i :class="'iconfont icon-user '+iconColor"></i>
-    </v-btn>
     <v-btn @click="$router.go(-1)">
       <i :class="'iconfont icon-chevronleft '+iconColor"></i>
     </v-btn>
@@ -18,16 +15,15 @@ import {inject} from "vue";
 
 export default {
   name: "Header",
-  props: {
-    iconColor: "",
-    path: "",
-  },
+  props: ["iconColor"],
   setup(props) {
     const showDrawer = inject("showDrawer");
-    const iconColor = props.iconColor;
+    // const showMsg = inject("showMsg");
+    // showMsg,
+    const iconColor = props.iconColor || "text-blue";
     return {
       iconColor,
-      showDrawer
+      showDrawer,
     };
   }
 };
@@ -49,7 +45,6 @@ export default {
 
     .iconfont {
       font-size: 1.5rem;
-      color: #2196F3;
     }
   }
 }

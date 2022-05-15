@@ -1,13 +1,6 @@
 <template>
   <div class="root">
-    <div class="navBar">
-      <button @click="$router.go(-1)">
-        <i class="iconfont">&#xe61e;</i>
-      </button>
-      <button @click="$router.push('/')">
-        <i class="iconfont">&#xe64f;</i>
-      </button>
-    </div>
+    <Header></Header>
     <v-form
         ref="form"
         class="form"
@@ -92,19 +85,11 @@ import {codeAndSend} from "../utils/encryptUtils";
 import router from "../router";
 import {useRoute} from "vue-router";
 import {useStore} from "vuex";
-
+import Header from "../components/Header";
 export default {
   name: "Login",
-  components: {},
-  methods: {},
-  // data:()=>({
-  //   user:{
-  //     userInfo: "",
-  //     password: "",
-  //     valid: true,
-  //     method: 0
-  //   }
-  // }),
+  components: {Header},
+
   setup() {
     const form = ref();
     const store = useStore();
@@ -232,7 +217,7 @@ export default {
     height: 1.5rem;
   }
 
-  margin: 5rem auto;
+  margin: 3rem auto;
   width: 15rem;
 }
 

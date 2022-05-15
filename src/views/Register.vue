@@ -1,13 +1,6 @@
 <template>
   <div class="root">
-    <div class="navBar">
-      <button @click="$router.go(-1)">
-        <i class="iconfont">&#xe61e;</i>
-      </button>
-      <button @click="$router.push('/')">
-        <i class="iconfont">&#xe64f;</i>
-      </button>
-    </div>
+    <Header></Header>
     <v-form
         ref="form"
         class="form"
@@ -111,10 +104,11 @@ import {encrypt} from "../utils/encryptUtils";
 import router from "../router";
 import {useRoute} from "vue-router";
 import {useStore} from "vuex";
+import Header from "../components/Header";
 
 export default {
   name: "Register",
-  components: {},
+  components: {Header},
   methods: {},
   setup() {
     const form = ref();
@@ -142,7 +136,7 @@ export default {
 
     const code = () => {
       user.notCode = false;//每十分钟只允许发送一次
-      user.codeSend=true;
+      user.codeSend = true;
       //user.userInfoCheck = true;//用户名和邮箱验证通过，且发送了验证码
       Msg({
         color: "success",
@@ -164,7 +158,7 @@ export default {
       }).then(res => {
         if (res === 1) {
           user.userInfoCheck = true;
-          user.codeSending=true;
+          user.codeSending = true;
           Msg({
             color: "success",
             showClose: true,
@@ -238,7 +232,7 @@ export default {
                   user.validateCode = "";
                   return false;
                 }
-              }).then(()=> {
+              }).then(() => {
                 user.userKey = encrypt(user.password);
                 return request.post("/landr/register", {
                   username: user.username,

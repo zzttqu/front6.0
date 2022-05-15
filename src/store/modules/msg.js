@@ -29,6 +29,6 @@ export const Msg = (option) => {
         text: option.message || "爱莉希雅",
         showClose: option.showClose || false,
         timeout: option.timeout || 2000,
-        color: option.color || "blue-lighten-5"
+        color: option.color || "success"
     });
 };

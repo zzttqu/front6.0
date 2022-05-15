@@ -1,26 +1,7 @@
 <template>
   <v-app>
     <MessageBar></MessageBar>
-    <v-navigation-drawer
-        v-model="drawer"
-        temporary
-    >
-      <v-list
-
-      >
-<!--        :items="items"-->
-        <v-list-item
-            to="/"
-        >
-          123
-        </v-list-item>
-        <v-list-item
-            to="/"
-        >
-          123
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
+    <NavigationDrawer ref="drawerRef"></NavigationDrawer>
     <v-main class="main">
       <router-view v-slot="{ Component }">
         <transition
@@ -43,38 +24,37 @@
 import "animate.css";
 import MessageBar from "./components/MessageBar/MessageBar";
 import {provide, ref} from "vue";
+import NavigationDrawer from "./components/NavigationDrawer";
 
 export default {
   name: "App",
-  components: {MessageBar},
+  components: {MessageBar, NavigationDrawer},
   setup() {
-    let drawer = ref(false);
-    let items = ref([
-      {
-        title: "Foo",
-        value: "foo",
-        open: ""
-      },
-      {
-        title: "Bar",
-        value: "bar",
-      },
-      {
-        title: "Fizz",
-        value: "fizz",
-      },
-      {
-        title: "Buzz",
-        value: "buzz",
-      },
-    ],);
+
+    let drawerRef = ref();
     const showDrawer = () => {
-      drawer.value = !drawer.value;
+      // drawer.value=!drawer.value
+      drawerRef.value.showDrawer();
     };
+    // let MsgOption = reactive({
+    //   show: false,
+    //   color: "blue",
+    //   text: "爱莉希雅",
+    //   showClose: true,
+    //   timeout: 3000,
+    // });
+    // const showMsg = (option) => {
+    //   MsgOption.show = option.show || false;
+    //   MsgOption.text = option.message || "爱莉希雅";
+    //   MsgOption.showClose = option.showClose || false;
+    //   MsgOption.color = option.color || "blue-lighten-5";
+    //   MsgOption.timeout = option.timeout || 3000;
+    // };
+
     provide("showDrawer", showDrawer);
+    // provide("showMsg", showMsg);
     return {
-      drawer,
-      items
+      drawerRef,
     };
   }
 };
