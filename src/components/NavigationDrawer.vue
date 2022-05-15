@@ -31,8 +31,7 @@
       </v-list-item>
     </v-list>
     <!--    基本信息-->
-    <div style="position: absolute;bottom: 1rem;width: 100%;padding: 0.4rem" @click="$router.push('/user')">
-
+    <div class="userInfo" @click="$router.push('/user')">
       <div class="basicInfo">
         <div class="avatar">
           <img
@@ -58,7 +57,15 @@
           </div>
         </div>
       </div>
-
+      <v-btn
+          color="warning"
+          variant="contained-flat"
+          @click=""
+          disabled
+          size="small"
+      >
+        注销登录
+      </v-btn>
     </div>
   </v-navigation-drawer>
 </template>
@@ -82,7 +89,20 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  bottom: 0.5rem;
+  width: 100%;
+  justify-content: space-around;
+  height: 8rem;
+  padding: 0.4rem
+}
+
 .basicInfo {
+  width: 100%;
   display: flex;
   border-radius: 1rem;
   border: #2196F3 0.1rem solid;
@@ -113,7 +133,6 @@ export default {
     position: relative;
   }
 }
-
 .uandlv {
   flex: 4;
   display: flex;
@@ -129,4 +148,5 @@ export default {
 
   }
 }
+
 </style>

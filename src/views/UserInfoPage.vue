@@ -53,14 +53,6 @@
       </SigninBar>
       <TaskList>
       </TaskList>
-      <v-btn
-          color="warning"
-          class="logout"
-          rounded="xl"
-          @click="drawer=!drawer"
-      >
-        我是注销按钮
-      </v-btn>
     </div>
 </template>
 
@@ -78,28 +70,8 @@ export default {
     Header,
   },
   setup() {
-    let drawer = ref();
-    let items = ref([
-      {
-        title: "Foo",
-        value: "foo",
-      },
-      {
-        title: "Bar",
-        value: "bar",
-      },
-      {
-        title: "Fizz",
-        value: "fizz",
-      },
-      {
-        title: "Buzz",
-        value: "buzz",
-      },
-    ],);
+
     return {
-      drawer,
-      items
     };
   }
 };
@@ -165,10 +137,5 @@ export default {
   height: 2rem;
 }
 
-.logout {
-  position: absolute;
-  left: 10%;
-  bottom: 1rem;
-  width: 80%;
-}
+
 </style>
