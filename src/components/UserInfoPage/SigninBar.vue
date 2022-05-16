@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import {reactive} from "vue";
+import {onMounted, reactive} from "vue";
 import request from "../../utils/apiUtil";
 import {Msg} from "../../store/modules/msg";
 
@@ -63,6 +63,22 @@ export default {
           index: -1,
         }
     );
+    onMounted(()=>{
+      request.get("/user/signinlist").then(res => {
+        daysData.days = res;
+        //获得当前已签到多少天，之后签到成功后+1天
+        daysData.days.reduce((total, currentValue) => {
+          if (currentValue.flag === 0 && total === 0) {
+            daysData.signInDays = currentValue.day - 1;
+            total += 1;
+            return total;
+          }
+          else {
+            return total;
+          }
+        }, 0);
+      });
+    })
     return {
       daysData,
       animate,

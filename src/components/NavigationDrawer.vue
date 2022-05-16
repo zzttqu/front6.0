@@ -45,21 +45,21 @@
         </div>
         <div class="uandlv text-blue-lighten-1">
           <div class="username">
-            用户名
+            {{store.state.user.username}}
           </div>
           <div class="level">
             <span>
               Lv.
             </span>
             <span>
-              6
+              {{store.state.user.level}}
             </span>
           </div>
         </div>
       </div>
       <v-btn
           variant="text"
-          @click=""
+          @click="logout"
           size="small"
       >
         注销登录
@@ -70,17 +70,35 @@
 
 <script>
 import {ref} from "vue";
+import {useStore} from "vuex";
+import request from "../utils/apiUtil";
+import {Msg} from "../store/modules/msg";
 
 export default {
   name: "NavigationDrawer",
   setup() {
     let drawer = ref(false);
+    const store=useStore();
     const showDrawer = () => {
       drawer.value = !drawer.value;
     };
+    const logout=()=>{
+      request.get('/landr/logout').then(res=>{
+        if (res===1){
+          Msg({
+            showClose: true,
+            message: "注销成功",
+            color: "success"
+          });
+          showDrawer()
+        }
+      })
+    }
     return {
+      store,
       drawer,
       showDrawer,
+      logout,
     };
   }
 };

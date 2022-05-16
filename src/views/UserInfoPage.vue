@@ -109,15 +109,24 @@ export default {
       }
       return idx;
     };
-    onMounted(() => {
-      request.get("/user/explist").then(res => {
-        if (res.length > 0) {
-          res.reduce((total, value, index) => {
+    const getExpList = () => {
+      request.get("/user/exp").then(res => {
+        userInfo.exp=res.exp;
+        userInfo.level = findLev(userInfo.levelExp, userInfo.exp);
+        if (res.count.length > 0) {
+          res.count.reduce((total, value, index) => {
             userInfo.count[index] = value.count;
           }, 0);
         }
+        store.commit("setUserExpInfo",{
+          exp:userInfo.exp,
+          level:userInfo.level,
+          count:userInfo.count,
+        })
       });
-      userInfo.level = findLev(userInfo.levelExp, userInfo.exp);
+    };
+    onMounted(() => {
+      getExpList();
     });
     return {
       userInfo,

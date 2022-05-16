@@ -1,7 +1,6 @@
 <template>
   <div>
     123
-    <NavigationDrawer></NavigationDrawer>
   </div>
 
 </template>

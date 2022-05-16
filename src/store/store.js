@@ -12,6 +12,7 @@ export default createStore({
             uid: 0,
             username: "默认",
             isLogin: false,
+            level: 0,
             exp: 0,
             expCount: [0, 0, 0],
         },
@@ -40,6 +41,11 @@ export default createStore({
         checkUserLogin(state, status) {
             state.user.isLogin = status.isLogin;
         },
+        setUserExpInfo(state, info) {
+            state.user.exp = info.exp;
+            state.user.level = info.level;
+            state.user.expCount = info.count;
+        }
     },
     actions: {
         checkUserStatus({commit}) {
