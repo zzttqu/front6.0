@@ -10,7 +10,7 @@ export default createStore({
         user: {
             likes: [],
             uid: 0,
-            username: "",
+            username: "默认",
             isLogin: false,
             exp: 0,
             expCount: [0, 0, 0],

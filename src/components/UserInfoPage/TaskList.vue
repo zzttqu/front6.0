@@ -14,6 +14,7 @@
               color="light-blue"
               striped
               height="10px"
+              :indeterminate="loading"
           >
           </v-progress-linear>
         </div>
@@ -24,18 +25,18 @@
 </template>
 
 <script>
-import {onMounted, reactive} from "vue";
-import request from "../../utils/apiUtil";
+import {onMounted, reactive, watch, toRef, ref} from "vue";
 
 export default {
   name: "TaskTable",
-  props: [],
+  props: ["expData"],
   setup(props) {
+    let loading=ref(true)
+    let expData = toRef(props, "expData");
     const option = reactive({
       list: [
         {
           title: "发帖一次+10",
-          count: 0,
           cause: 1,
           exp: 10,
           limit: 20,
@@ -44,7 +45,6 @@ export default {
         {
           title: "点赞一次+10",
           cause: 0,
-          count: 0,
           exp: 0,
           limit: 50,
           finished: false
@@ -52,7 +52,6 @@ export default {
         {
           title: "还没想好是啥",
           cause: 0,
-          count: 0,
           exp: 233,
           limit: 999,
           finished: false
@@ -60,29 +59,26 @@ export default {
         {
           title: "提提建议吧",
           cause: 0,
-          count: 0,
           exp: 114,
           limit: 514,
           finished: false
         },
       ]
     });
-    // onMounted(() => {
-    //   request.get("/user/explist").then(res => {
-    //     const list=res
-    //     if (list.length>0){
-    //       option.list.reduce((total, value,index) => {
-    //         value.count=list[index].count
-    //       }, 0);
-    //     }
-    //   }).then(() => {
-    //     option.list.reduce((total, value) => {
-    //       value.exp = 10 * value.count;
-    //     },0);
-    //   });
-    // });
+    watch([expData.value], () => {
+      option.list.reduce((total, value, currentIndex) => {
+        if (value.exp>=value.limit){
+          return false;
+        }
+        value.exp = 10 * expData.value[currentIndex];
+      }, 0);
+      loading.value=false
+    });
+    onMounted(() => {
+    });
     return {
       option,
+      loading
     };
   }
 };

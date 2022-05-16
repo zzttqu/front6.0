@@ -7,6 +7,7 @@
   >
     <v-list
         width="10rem"
+        color="blue"
     >
       <v-list-item
           to="/"
