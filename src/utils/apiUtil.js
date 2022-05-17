@@ -1,5 +1,5 @@
 import axios from "axios";
-import {Msg} from "../store/modules/msg";
+import {Msg} from "../store/Msg";
 
 //调试需要修改http://localhost:8080/utils
 //上线后修改为http://152.136.137.249/utils
@@ -31,8 +31,6 @@ request.interceptors.request.use(config => {
         Msg({
             showClose: true,
             message: "请求出错",
-            type: "error",
-            center: true,
         });
         return Promise.reject(error);
     });
@@ -52,9 +50,6 @@ request.interceptors.response.use(
                 Msg({
                     showClose: true,
                     message: `${response.data.data}，休息一下吧`,
-                    type: "info",
-                    center: true,
-                    duration: 3000,
                 });
                 return false;
             }
@@ -63,9 +58,7 @@ request.interceptors.response.use(
                 Msg({
                     showClose: true,
                     message: `请求不合法，详细信息：${response.data.data}`,
-                    type: "warning",
-                    center: true,
-                    duration: 5000,
+                    color: "warning",
                 });
                 return response.data.data;
             }
@@ -88,18 +81,14 @@ request.interceptors.response.use(
                     Msg({
                         showClose: true,
                         message: `服务器崩了啊！！！！！`,
-                        type: "warning",
-                        center: true,
-                        duration: 5000,
+                        color: "warning",
                     });
                 }
                 else if (err.response.status === 404) {
                     Msg({
                         showClose: true,
                         message: `${err.config.url}找不到了`,
-                        type: "warning",
-                        center: true,
-                        duration: 5000,
+                        color: "warning",
                     });
                 }
             }

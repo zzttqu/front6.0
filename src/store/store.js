@@ -1,6 +1,6 @@
 import {createStore} from "vuex";
 import request from "../utils/apiUtil";
-import msg from "./modules/msg";
+import Message from "./modules/Message";
 
 export default createStore({
     state: {
@@ -74,6 +74,6 @@ export default createStore({
         },
     },
     modules: {
-        msg
+        Message
     }
 });

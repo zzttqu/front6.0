@@ -19,7 +19,7 @@
 <script>
 import {onMounted, reactive} from "vue";
 import request from "../../utils/apiUtil";
-import {Msg} from "../../store/modules/msg";
+import {Msg} from "../../store/Msg";
 
 export default {
   name: "SigninBar",

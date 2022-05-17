@@ -99,7 +99,7 @@
 <script>
 import {reactive, ref} from "vue";
 import request from "../utils/apiUtil";
-import {Msg} from "../store/modules/msg";
+import {Msg} from "../store/Msg";
 import {encrypt} from "../utils/encryptUtils";
 import router from "../router";
 import {useRoute} from "vue-router";

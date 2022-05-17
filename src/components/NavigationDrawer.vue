@@ -71,8 +71,8 @@
 <script>
 import {ref} from "vue";
 import {useStore} from "vuex";
-import request from "../utils/apiUtil";
-import {Msg} from "../store/modules/msg";
+import request from "../utils/apiUtil.js";
+import {Msg} from "../store/Msg";
 
 export default {
   name: "NavigationDrawer",
