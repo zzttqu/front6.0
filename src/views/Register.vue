@@ -158,7 +158,7 @@ export default {
       }).then(res => {
         if (res === 1) {
           user.userInfoCheck = true;
-          user.codeSending = true;
+          user.codeSend = false;
           Msg({
             color: "success",
             showClose: true,
@@ -167,6 +167,7 @@ export default {
         }
         else if (res === 0) {
           user.notCode = true;
+          user.codeSend = false;
           Msg({
             color: "info",
             showClose: true,

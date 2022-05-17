@@ -20,11 +20,13 @@
         留言板
       </v-list-item>
       <v-list-item
+          disabled=""
           to="/login"
       >
         讨论区
       </v-list-item>
       <v-list-item
+          disabled=""
           to="/register"
       >
         图片区
@@ -45,14 +47,14 @@
         </div>
         <div class="uandlv text-blue-lighten-1">
           <div class="username">
-            {{store.state.user.username}}
+            {{ store.state.user.username }}
           </div>
           <div class="level">
             <span>
               Lv.
             </span>
             <span>
-              {{store.state.user.level}}
+              {{ store.state.user.level }}
             </span>
           </div>
         </div>
@@ -78,22 +80,25 @@ export default {
   name: "NavigationDrawer",
   setup() {
     let drawer = ref(false);
-    const store=useStore();
+    const store = useStore();
     const showDrawer = () => {
       drawer.value = !drawer.value;
     };
-    const logout=()=>{
-      request.get('/landr/logout').then(res=>{
-        if (res===1){
+    const logout = () => {
+      request.get("/landr/logout").then(res => {
+        if (res === 1) {
           Msg({
             showClose: true,
             message: "注销成功",
             color: "success"
           });
-          showDrawer()
+          showDrawer();
+          return false;
         }
-      })
-    }
+      }).catch(() => {
+
+      });
+    };
     return {
       store,
       drawer,
@@ -149,6 +154,7 @@ export default {
     position: relative;
   }
 }
+
 .uandlv {
   flex: 4;
   display: flex;

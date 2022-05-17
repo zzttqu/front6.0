@@ -1,4 +1,3 @@
-
 export default {
     namespaced: true,
     state: {
@@ -20,7 +19,5 @@ export default {
             commit("showMsg", payload);
         }
     }
-
-
 };
 

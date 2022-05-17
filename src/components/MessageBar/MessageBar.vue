@@ -5,6 +5,7 @@
       top="true"
       :color="option.color"
       rounded="pill"
+      style="z-index: 5000"
   >
     <div style="text-align: center">
       {{ option.text }}
@@ -26,15 +27,14 @@ import {useStore} from "vuex";
 
 export default {
   name: "MessageBar",
-  props:['option'],
-  setup(props) {
+  setup() {
     const store = useStore();
     store.subscribe((mutation, state) => {
-      if (mutation.type === "msg/showMsg") {
-        option.text = state.msg.text;
-        option.color = state.msg.color;
-        option.timeout = state.msg.timeout;
-        option.showClose = state.msg.showClose;
+      if (mutation.type === "Message/showMsg") {
+        option.text = state.Message.text;
+        option.color = state.Message.color;
+        option.timeout = state.Message.timeout;
+        option.showClose = state.Message.showClose;
         option.show = true;
       }
     });
