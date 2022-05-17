@@ -1,18 +1,18 @@
 <template>
   <v-snackbar
-      v-model="option.show"
-      :timeout="option.timeout"
+      v-model="submitOption.show"
+      :timeout="submitOption.timeout"
       top="true"
-      :color="option.color"
+      :color="submitOption.color"
       rounded="pill"
       style="z-index: 5000"
   >
     <div style="text-align: center">
-      {{ option.text }}
+      {{ submitOption.text }}
     </div>
-    <template v-slot:actions v-if="option.showClose">
+    <template v-slot:actions v-if="submitOption.showClose">
       <v-btn
-          @click="option.show = false"
+          @click="submitOption.show = false"
           size="small"
       >
         关闭
@@ -31,14 +31,14 @@ export default {
     const store = useStore();
     store.subscribe((mutation, state) => {
       if (mutation.type === "Message/showMsg") {
-        option.text = state.Message.text;
-        option.color = state.Message.color;
-        option.timeout = state.Message.timeout;
-        option.showClose = state.Message.showClose;
-        option.show = true;
+        submitOption.text = state.Message.text;
+        submitOption.color = state.Message.color;
+        submitOption.timeout = state.Message.timeout;
+        submitOption.showClose = state.Message.showClose;
+        submitOption.show = true;
       }
     });
-    let option = reactive({
+    let submitOption = reactive({
       show: false,
       color: "",
       text: "",
@@ -46,7 +46,7 @@ export default {
       timeout: 0,
     });
     return {
-      option
+      submitOption
     };
   },
   // data() {

@@ -32,6 +32,7 @@
           <v-text-field
               label="图片描述"
               v-model="content"
+              counter="50"
               :rules="[v=>v.length<50||'字数太多啦']"
           >
           </v-text-field>
@@ -40,7 +41,7 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
-            @click="dialog=!dialog">
+            @click="options.show=!options.show">
           返回
         </v-btn>
         <v-btn
@@ -55,7 +56,8 @@
 
 <script>
 import {reactive, ref, watch} from "vue";
-import ImgUpload from "./ImgUpload";
+import ImgUpload from "./MyInput/ImgUpload";
+//todo 如果新组件调好了需要换text组件
 
 export default {
   name: "MyDialog",
@@ -76,7 +78,9 @@ export default {
       }
     };
     const validate=()=>{
+      if (content){
 
+      }
     }
     return {
       props,

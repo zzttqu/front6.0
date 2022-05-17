@@ -3,11 +3,10 @@
     <v-btn @click="img">
       图片
     </v-btn>
+
     <v-btn @click="text">
-      文字
+      文字<i class="icon"></i>
     </v-btn>
-    <MyDialog :options="option">
-    </MyDialog>
   </div>
 </template>
 
@@ -19,23 +18,23 @@ export default {
   name: "TEST",
   components: {MyDialog},
   setup() {
-    let option = reactive({
+    let submitOption = reactive({
       title: "",
       show: false,
       type: 0
     });
     const img = () => {
-      option.show = true;
-      option.type = 1;
-      option.title = "你的美图";
+      submitOption.show = true;
+      submitOption.type = 1;
+      submitOption.title = "你的美图";
     };
     const text = () => {
-      option.show = true;
-      option.type = 0;
-      option.title = "你的留言";
+      submitOption.show = true;
+      submitOption.type = 0;
+      submitOption.title = "你的留言";
     };
     return {
-      option,
+      submitOption: submitOption,
       img,
       text,
     };
@@ -43,6 +42,14 @@ export default {
 };
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+.icon {
+  background: #f00;
+  width: 0.4em;
+  height: 0.4em;
+  top: 0.2rem;
+  right: 0.2rem;
+  border-radius: 50%;
+  position: absolute;
+}
 </style>

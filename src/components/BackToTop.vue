@@ -4,11 +4,14 @@
       enter-active-class="animate__animated animate__fadeIn animate__faster"
       leave-active-class="animate__animated animate__fadeOut animate__faster"
   >
-    <div class="btn bg-blue text-grey-lighten-4" @click="goTop()" v-show="scY > 300">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon__svg">
-        <path d="M7.41,15.41L12,10.83L16.59,15.41L18,14L12,8L6,14L7.41,15.41Z"></path>
-      </svg>
-    </div>
+    <v-btn
+        class="btn bg-blue text-grey-lighten-4"
+        @click="goTop()"
+        v-show="scY > 200"
+        icon="mdi-navigation"
+    >
+
+    </v-btn>
   </transition>
 
 </template>
@@ -20,8 +23,6 @@ export default {
   setup() {
     let scTimer = ref(0);
     let scY = ref(0);
-
-
     onMounted(() => {
       window.addEventListener("scroll", handleScroll);
     });
@@ -40,14 +41,11 @@ export default {
         behavior: "smooth"
       });
     }
-
     return {
       handleScroll,
       goTop,
       scY
-
     };
-
   },
   destroyed() {
     document.removeEventListener("scroll", this.handleScroll);
@@ -59,14 +57,8 @@ export default {
 .btn {
   position: fixed;
   z-index: 500;
-  bottom: 1rem;
+  bottom: 4rem;
   right: 1rem;
-  background-color: #333;
-  width: 2rem;
-  height: 2rem;
-  text-align: center;
-  line-height: 2rem;
-  border-radius: 50%;
-
+  font-size: 0.8rem;
 }
 </style>

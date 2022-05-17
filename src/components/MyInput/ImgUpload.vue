@@ -44,8 +44,8 @@
 
 
 import {ref} from "vue";
-import {Msg} from "../store/Msg";
-import request from "../utils/apiUtil";
+import {Msg} from "../../store/Msg";
+import request from "../../utils/apiUtil";
 
 
 export default {

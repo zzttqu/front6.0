@@ -1,7 +1,7 @@
 <template>
 
   <div class="list">
-    <div class="item" v-for="item in option.list">
+    <div class="item" v-for="item in submitOption.list">
       <div class="name">
         {{ item.title }}
       </div>
@@ -33,7 +33,7 @@ export default {
   setup(props) {
     let loading=ref(true)
     let expData = toRef(props, "expData");
-    const option = reactive({
+    const submitOption = reactive({
       list: [
         {
           title: "发帖一次+10",
@@ -66,7 +66,7 @@ export default {
       ]
     });
     watch([expData.value], () => {
-      option.list.reduce((total, value, currentIndex) => {
+      submitOption.list.reduce((total, value, currentIndex) => {
         if (value.exp>=value.limit){
           return false;
         }
@@ -77,7 +77,7 @@ export default {
     onMounted(() => {
     });
     return {
-      option,
+      submitOption,
       loading
     };
   }

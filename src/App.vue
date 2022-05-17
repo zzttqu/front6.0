@@ -43,12 +43,12 @@ export default {
     //   showClose: true,
     //   timeout: 3000,
     // });
-    // const showMsg = (option) => {
-    //   MsgOption.show = option.show || false;
-    //   MsgOption.text = option.message || "爱莉希雅";
-    //   MsgOption.showClose = option.showClose || false;
-    //   MsgOption.color = option.color || "blue-lighten-5";
-    //   MsgOption.timeout = option.timeout || 3000;
+    // const showMsg = (submitOption) => {
+    //   MsgOption.show = submitOption.show || false;
+    //   MsgOption.text = submitOption.message || "爱莉希雅";
+    //   MsgOption.showClose = submitOption.showClose || false;
+    //   MsgOption.color = submitOption.color || "blue-lighten-5";
+    //   MsgOption.timeout = submitOption.timeout || 3000;
     // };
 
     provide("showDrawer", showDrawer);
