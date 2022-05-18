@@ -1,0 +1,10 @@
+.red-dot:before {
+  content: " ";
+  background: #f00;
+  width: 0.4em;
+  height: 0.4em;
+  top: 0.1rem;
+  right: 0.1rem;
+  border-radius: 100%;
+  position: absolute;
+}

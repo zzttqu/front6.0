@@ -12,6 +12,7 @@ export default createStore({
             uid: 0,
             username: "默认",
             isLogin: false,
+            isSignIn: false,
             level: 0,
             exp: 0,
             expCount: [0, 0, 0],

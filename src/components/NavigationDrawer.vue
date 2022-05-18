@@ -21,19 +21,19 @@
       </v-list-item>
       <v-list-item
           disabled=""
-          to="/login"
+          to="/forum"
       >
         讨论区
       </v-list-item>
       <v-list-item
           disabled=""
-          to="/register"
+          to="/gallery"
       >
         图片区
       </v-list-item>
     </v-list>
     <!--    基本信息-->
-    <div class="userInfo" @click="$router.push('/user')">
+    <div :class="'userInfo'+' '+'red-dot'" @click="$router.push('/user')">
       <div class="basicInfo">
         <div class="avatar">
           <img
@@ -110,6 +110,10 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.red-dot:before{
+  top: 1rem;
+  right: 1rem;
+}
 .userInfo {
   display: flex;
   flex-direction: column;
