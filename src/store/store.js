@@ -1,80 +1,37 @@
 import {createStore} from "vuex";
 import request from "../utils/apiUtil";
 import Message from "./modules/Message";
+import User from "./modules/User.js";
 
 export default createStore({
     state: {
         //测试的时候转为http://localhost:8080/utils/file/img/
         //部署的时候转为http://152.136.137.249/utils/file/img/
         imgUrl: process.env.VUE_APP_IMG_BASE_URL,
-        user: {
-            likes: [],
-            uid: 0,
-            username: "默认",
-            isLogin: false,
-            isSignIn: false,
-            level: 0,
-            exp: 0,
-            expCount: [0, 0, 0],
-        },
         pattern: /(\u5f20\u5929\u5955)|(\u4e60\u8fd1\u5e73)/,
         session: "",
+        isLogin: false,
     },
     mutations: {
-        setUserlikes(state, dialog_id) {
-            const index = state.user.likes.indexOf(dialog_id);
-            if (index === -1) {
-                state.user.likes.push(dialog_id);
-            }
-            else {
-                state.user.likes.splice(index, 1);
-            }
+        checkLogin(state, status) {
+            state.isLogin = status;
         },
-        setUsername(state, username) {
-            state.user.username = username;
-        },
-        userLogin(state, status) {
-            state.user.uid = status.uid;
-            state.user.isLogin = status.isLogin;
-            state.user.likes = status.likes;
-            state.user.username = status.username;
-        },
-        checkUserLogin(state, status) {
-            state.user.isLogin = status.isLogin;
-        },
-        setUserExpInfo(state, info) {
-            state.user.exp = info.exp;
-            state.user.level = info.level;
-            state.user.expCount = info.count;
-        }
     },
     actions: {
         checkUserStatus({commit}) {
             request.get(`/landr/check`).then(res => {
                 if (res === 1) {
-                    commit("checkUserLogin",
-                        {
-                            isLogin: true,
-                        }
-                    );
+                    commit("checkLogin", true);
                 }
                 else {
-                    commit("userLogin", {
-                        uid: 0,
-                        isLogin: false,
-                        likes: [],
-                        username: ""
-                    });
+                    commit("checkLogin", false);
                     // router.push('/login')
                 }
             });
         },
-        //这个登录的时候要用
-        setUserStatus({commit}, status) {
-            commit("userLogin", status);
-        },
     },
     modules: {
-        Message
+        Message,
+        User,
     }
 });

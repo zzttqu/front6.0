@@ -129,9 +129,8 @@ export default {
                 });
               }
               else {
-                store.dispatch("setUserStatus", {
+                store.commit("User/login", {
                   uid: res.uid,
-                  isLogin: true,
                   username: res.username,
                   likes: res.likes
                 });
@@ -140,7 +139,6 @@ export default {
                   message: `欢迎 ${res.username} ,正在跳转...`,
                   timeout: 1000,
                 });
-
                 setTimeout(() => {
                   router.push(nextUrl);
                   nextUrl = "/main";

@@ -15,12 +15,12 @@
         首页
       </v-list-item>
       <v-list-item
+          :active="false"
           to="/bbs"
       >
         留言板
       </v-list-item>
       <v-list-item
-          disabled=""
           to="/forum"
       >
         讨论区
@@ -31,9 +31,10 @@
       >
         图片区
       </v-list-item>
+
     </v-list>
     <!--    基本信息-->
-    <div :class="'userInfo'+' '+'red-dot'" @click="$router.push('/user')">
+    <div :class="'userInfo '+(store.state.User.isSignIn?'':'red-dot')" @click="$router.push('/user')">
       <div class="basicInfo">
         <div class="avatar">
           <img
@@ -47,14 +48,14 @@
         </div>
         <div class="uandlv text-blue-lighten-1">
           <div class="username">
-            {{ store.state.user.username }}
+            {{ store.state.User.username }}
           </div>
           <div class="level">
             <span>
               Lv.
             </span>
             <span>
-              {{ store.state.user.level }}
+              {{ store.state.User.level }}
             </span>
           </div>
         </div>
@@ -110,10 +111,11 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.red-dot:before{
+.red-dot:before {
   top: 1rem;
   right: 1rem;
 }
+
 .userInfo {
   display: flex;
   flex-direction: column;

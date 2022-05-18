@@ -2,9 +2,9 @@
 
   <div class="list">
     <div
-        :class="'item animate__animated ' +(index===animate.index?animate.list[animate.num]:'')"
+        :class="'item animate__animated '+(index===animate.index?animate.list[animate.num]:'')"
         v-for="(day,index) in daysData.days">
-      <button class="day" :disabled="day.flag===1" @click="signIn(index)">
+      <button :class="'day '+((index===totalDays-1)&&(!store.state.User.isSignIn)?'red-dot':'')" :disabled="day.flag===1" @click="signIn(index)">
         <img class="front" src="/level/01.svg" alt="图片"/>
         <img class="back" src="/level/checkmark-circle.svg" :style="'opacity: '+(day.flag===1?1:0)+';'"
              alt="图片"/>
@@ -17,13 +17,16 @@
 </template>
 
 <script>
-import {onMounted, reactive} from "vue";
+import {onMounted, reactive, ref} from "vue";
 import request from "../../utils/apiUtil";
 import {Msg} from "../../store/Msg";
+import {useStore} from "vuex";
 
 export default {
   name: "SigninBar",
   setup(props, {emit}) {
+    const store = useStore();
+
     let daysData = reactive({
       days: [
         {
@@ -63,11 +66,12 @@ export default {
           index: -1,
         }
     );
-    onMounted(()=>{
+    let totalDays = ref(0);
+    onMounted(() => {
       request.get("/user/signinlist").then(res => {
         daysData.days = res;
         //获得当前已签到多少天，之后签到成功后+1天
-        daysData.days.reduce((total, currentValue) => {
+        totalDays.value = daysData.days.reduce((total, currentValue) => {
           if (currentValue.flag === 0 && total === 0) {
             daysData.signInDays = currentValue.day - 1;
             total += 1;
@@ -78,10 +82,12 @@ export default {
           }
         }, 0);
       });
-    })
+    });
     return {
+      totalDays,
       daysData,
       animate,
+      store,
       signIn(index) {
         animate.index = index;
         animate.num = 1;
@@ -94,6 +100,7 @@ export default {
               daysData.signInDays += 1;
               daysData.days[index].flag = 1;
               daysData.signInStatus = true;
+              store.commit("User/signInStatus", true);
               Msg({
                 showClose: true,
                 message: "签到成功咯",
@@ -136,11 +143,12 @@ export default {
   border-radius: 1rem;
   box-shadow: #E0E0E0 0.1rem 0.1rem 0.5rem;
   padding: 0.2rem;
+
   .item {
     padding: 0;
     margin: 0;
     flex: 1;
-    height:100%;
+    height: 100%;
   }
 
   button {

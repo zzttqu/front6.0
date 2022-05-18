@@ -86,8 +86,8 @@ export default {
     //引入vuex
     const store = useStore();
     let userInfo = reactive({
-      uid: store.state.user.uid,
-      username: store.state.user.username,
+      uid: store.state.User.uid,
+      username: store.state.User.username,
       level: 0,
       exp: 0,
       levelExp: [0, 200, 1500, 4500, 10800, 28800],
@@ -118,7 +118,7 @@ export default {
             userInfo.count[index] = value.count;
           }, 0);
         }
-        store.commit("setUserExpInfo",{
+        store.commit("User/setExpInfo",{
           exp:userInfo.exp,
           level:userInfo.level,
           count:userInfo.count,

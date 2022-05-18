@@ -64,7 +64,7 @@ const router = createRouter({
 
 export default router;
 router.beforeEach((to, from, next) => {
-    let isLogin = store.state.user.isLogin;
+    let isLogin = store.state.isLogin;
     if (isLogin) {
         next();
     }
