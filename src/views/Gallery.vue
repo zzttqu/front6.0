@@ -1,6 +1,7 @@
 <template>
-  <div>
-    图片区...施工中
+  <div class="root">
+    <Header></Header>
+    图片区施工中...
   </div>
 </template>
 

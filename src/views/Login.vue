@@ -46,6 +46,7 @@
           variant="plain"
           size="small"
           color="black"
+          disabled
           @click="$router.push('/')">
         忘记密码
       </v-btn>

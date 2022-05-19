@@ -40,26 +40,13 @@
         </v-progress-linear>
       </div>
     </div>
-    <v-btn-group
-        class="changeOption"
-        divided
-        rounded="2"
+    <v-btn
+        block
+        class="changeOption text-blue-lighten-1"
+        variant="text"
     >
-      <v-btn
-          width="50%"
-          size="small"
-          class="text-blue-lighten-1"
-      >
-        换个头像
-      </v-btn>
-      <v-btn
-          width="50%"
-          size="small"
-          class="text-blue-lighten-1"
-      >
-        换个名字
-      </v-btn>
-    </v-btn-group>
+      修改资料
+    </v-btn>
     <SigninBar>
     </SigninBar>
     <TaskList :exp-data="userInfo.count">
@@ -111,18 +98,18 @@ export default {
     };
     const getExpList = () => {
       request.get("/user/exp").then(res => {
-        userInfo.exp=res.exp;
+        userInfo.exp = res.exp;
         userInfo.level = findLev(userInfo.levelExp, userInfo.exp);
         if (res.count.length > 0) {
           res.count.reduce((total, value, index) => {
             userInfo.count[index] = value.count;
           }, 0);
         }
-        store.commit("User/setExpInfo",{
-          exp:userInfo.exp,
-          level:userInfo.level,
-          count:userInfo.count,
-        })
+        store.commit("User/setExpInfo", {
+          exp: userInfo.exp,
+          level: userInfo.level,
+          count: userInfo.count,
+        });
       });
     };
     onMounted(() => {

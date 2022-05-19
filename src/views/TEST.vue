@@ -1,24 +1,18 @@
 <template>
   <div>
-    <v-btn @click="img">
-      图片
-    </v-btn>
-    <div >
-      <v-btn @click="text" :class="unread?'red-dot':''">
-        文字
-        <!--      <i class="icon"></i>-->
-      </v-btn>
-    </div>
+    <ChangeInfo>
+
+    </ChangeInfo>
   </div>
 </template>
 
 <script>
-import MyDialog from "../components/MyDialog";
+import ChangeInfo from "../components/UserInfoPage/ChangeInfo";
 import {reactive, ref} from "vue";
 
 export default {
   name: "TEST",
-  components: {MyDialog},
+  components: {ChangeInfo},
   setup() {
     let submitOption = reactive({
       title: "",
