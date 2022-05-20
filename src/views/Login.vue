@@ -29,7 +29,7 @@
       </v-btn-toggle>
       <v-text-field
           v-model="user.userInfo"
-          :rules="infoRules"
+          :rules="[(user.method === 1 ? (v => !!v || '用户名还没填哦') : (v => /^\w+(\w|[.]\w+)+@\w+([.]\w+){1,3}/ig.test(v) ||'邮箱格式有误'))]"
           :label="user.method===0?'邮箱地址':'用户名'"
       >
       </v-text-field>
@@ -87,6 +87,7 @@ import router from "../router";
 import {useRoute} from "vue-router";
 import {useStore} from "vuex";
 import Header from "../components/Header";
+
 export default {
   name: "Login",
   components: {Header},
@@ -135,6 +136,7 @@ export default {
                   username: res.username,
                   likes: res.likes
                 });
+                store.commit("setLogin", true);
                 Msg({
                   showClose: true,
                   message: `欢迎 ${res.username} ,正在跳转...`,

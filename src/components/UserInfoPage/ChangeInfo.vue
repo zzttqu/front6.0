@@ -147,9 +147,11 @@ export default {
       reader.readAsArrayBuffer(file);//不知道有什么用，但是不能删
     }
 
-    function getImg() {
-      return Cropper.value.getCropData(data => {
-        return data;
+    async function getImg() {
+      return new Promise(resolve => {
+        Cropper.value.getCropData(data => {
+          resolve(data);
+        });
       });
     }
 
@@ -169,12 +171,19 @@ export default {
         return false;
       }
       if (change.changeAvatar) {
-        change.avatar = getImg();
+        getImg().then(res => {
+          request.post("/user/updateinfo", {
+            username: change.username,
+            avatar: res,
+          });
+        });
       }
-      request.post("/user/changeinfo", {
-        avatar: change.avatar,
-        username: change.username,
-      });
+      else {
+        request.post("/user/updateinfo", {
+          username: change.username,
+          avatar: change.avatar,
+        });
+      }
     };
     const reset = () => {
       change.changeAvatar = false;

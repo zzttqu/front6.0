@@ -31,7 +31,7 @@ const routes = [
         path: "/user",
         name: "user",
         meta: {
-            isLogin: false,
+            isLogin: true,
         },
         component: () => import("../views/UserInfoPage.vue")
     },

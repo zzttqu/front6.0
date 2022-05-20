@@ -16,6 +16,9 @@ export default createStore({
         checkLogin(state, status) {
             state.isLogin = status;
         },
+        setLogin(state, status) {
+            state.isLogin = status;
+        }
     },
     actions: {
         checkUserStatus({commit}) {
