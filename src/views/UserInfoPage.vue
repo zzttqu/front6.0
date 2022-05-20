@@ -1,5 +1,9 @@
 <template>
   <div class="root">
+    <ChangeInfo
+        v-model:activate="userInfo.changeInfo"
+    >
+    </ChangeInfo>
     <Header icon-color="text-blue"></Header>
     <div class="basicInfo">
       <div class="avatar">
@@ -44,6 +48,7 @@
         block
         class="changeOption text-blue-lighten-1"
         variant="text"
+        @click="userInfo.changeInfo=!userInfo.changeInfo"
     >
       修改资料
     </v-btn>
@@ -61,6 +66,7 @@ import {onMounted, reactive} from "vue";
 import Header from "../components/Header";
 import {useStore} from "vuex";
 import request from "../utils/apiUtil";
+import ChangeInfo from "../components/UserInfoPage/ChangeInfo";
 
 export default {
   name: "UserInfoPage",
@@ -68,6 +74,7 @@ export default {
     SigninBar,
     TaskList,
     Header,
+    ChangeInfo,
   },
   setup() {
     //引入vuex
@@ -78,7 +85,8 @@ export default {
       level: 0,
       exp: 0,
       levelExp: [0, 200, 1500, 4500, 10800, 28800],
-      count: [1, 1, 1, 1]
+      count: [1, 1, 1, 1],
+      changeInfo: false,
     });
     const findLev = (array, val) => {
       if (val < Math.min.apply(null, array)) {

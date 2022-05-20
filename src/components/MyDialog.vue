@@ -1,5 +1,4 @@
 <template>
-
   <v-dialog
       v-model="options.show"
       scrollable
@@ -63,6 +62,7 @@ export default {
   name: "MyDialog",
   components: {ImgUpload},
   props: ["options", "show"],
+  emits:['update:options'],
   setup(props) {
     const options = reactive(props.options);
     let dialog = ref(props.show);

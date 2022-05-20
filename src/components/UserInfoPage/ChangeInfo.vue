@@ -1,83 +1,92 @@
 <template>
-  <v-card>
-    <v-card-title>
-      修改信息
-    </v-card-title>
-    <v-card-subtitle>
-      <v-spacer></v-spacer>
-      <v-btn
-          size="small"
-          variant="text"
-          color="warning"
-          @click="reset">
-        清空
-      </v-btn>
-    </v-card-subtitle>
-    <div class="dialog-main">
-      <div class="avatarUpload">
-        <v-btn @click="change.changeAvatar=!change.changeAvatar">{{ avatarMsg[change.changeAvatar ? 1 : 0] }}</v-btn>
-        <input
-            v-if="change.changeAvatar"
-            type="file"
-            class="uploads"
-            accept="image/*"
-            @change="uploadImg($event, 1)"
-        />
+  <v-dialog
+      v-model="props.activate"
+      persistent
+  >
+    <v-card>
+      <v-card-title>
+        修改信息
+      </v-card-title>
+      <v-card-subtitle>
+        <v-spacer></v-spacer>
+        <v-btn
+            size="small"
+            variant="text"
+            color="warning"
+            @click="reset">
+          清空
+        </v-btn>
+      </v-card-subtitle>
+      <div class="dialog-main">
+        <div class="avatarUpload">
+          <v-btn @click="change.changeAvatar=!change.changeAvatar">{{ avatarMsg[change.changeAvatar ? 1 : 0] }}</v-btn>
+          <input
+              v-if="change.changeAvatar"
+              type="file"
+              class="uploads"
+              accept="image/*"
+              @change="uploadImg($event, 1)"
+          />
+        </div>
+        <div v-if="change.changeAvatar" style="height: 12rem; width: 12rem;  margin: 5% auto;">
+          <vueCropper
+              style="background-repeat: unset"
+              ref="Cropper"
+              :img="option.img"
+              :outputSize="option.outputSize"
+              :outputType="option.outputType"
+              :info="option.info"
+              :autoCrop="option.autoCrop"
+              :autoCropWidth="option.autoCropWidth"
+              :autoCropHeight="option.autoCropHeight"
+              :fixed="option.fixed"
+              :fixedBox="option.fixedBox"
+              :fixedNumber="option.fixedNumber"
+              :center-box="true"
+          ></vueCropper>
+        </div>
+        <div>
+          <v-text-field
+              label="用户名"
+              v-model="change.username"
+              counter="10"
+              :rules="[v=>v.length<10||'字数太多啦']"
+          >
+          </v-text-field>
+        </div>
       </div>
-      <div v-if="change.changeAvatar" style="height: 12rem; width: 12rem;  margin: 5% auto;">
-        <vueCropper
-            style="background-repeat: unset"
-            ref="Cropper"
-            :img="option.img"
-            :outputSize="option.outputSize"
-            :outputType="option.outputType"
-            :info="option.info"
-            :autoCrop="option.autoCrop"
-            :autoCropWidth="option.autoCropWidth"
-            :autoCropHeight="option.autoCropHeight"
-            :fixed="option.fixed"
-            :fixedBox="option.fixedBox"
-            :fixedNumber="option.fixedNumber"
-            :center-box="true"
-        ></vueCropper>
-      </div>
-      <div>
-        <v-text-field
-            label="用户名"
-            v-model="change.username"
-            counter="10"
-            :rules="[v=>v.length<10||'字数太多啦']"
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn
+            @click="close">
+          返回
+        </v-btn>
+        <v-btn
+            color="blue"
+            @click="changeInfo"
         >
-        </v-text-field>
-      </div>
-    </div>
-    <v-card-actions>
-      <v-spacer></v-spacer>
-      <v-btn
-          @click="">
-        返回
-      </v-btn>
-      <v-btn
-          color="blue"
-          @click="changeInfo"
-      >
-        提交
-      </v-btn>
-    </v-card-actions>
-  </v-card>
+          提交
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
-import {onBeforeUnmount, reactive, ref} from "vue";
+import {onBeforeUnmount, reactive, ref, watch} from "vue";
 import "vue-cropper/dist/index.css";
 import {VueCropper} from "vue-cropper";
 import {Msg} from "../../store/Msg";
 import request from "../../utils/apiUtil";
+import {useStore} from "vuex";
 
 export default {
   name: "ChangeUserInfo",
   components: {VueCropper},
-  setup() {
+  props: ["activate"],
+  emits: ["update:activate"],
+  setup(props, {emit}) {
+    const username = useStore().state.User.username;
     const Cropper = ref();
     let option = reactive({
       img: "https://s2.loli.net/2022/05/19/HSvN9qzWC7Luc4y.png", // 裁剪图片的地址
@@ -97,11 +106,11 @@ export default {
       infoTrue: true, // true 为展示真实输出图片宽高 false 展示看到的截图框宽高
     });
     let change = reactive({
-      username: "",
+      username: username,
       avatar: "",
       changeAvatar: false
     });
-
+    // let activate=ref(props.activate)
     let avatarMsg = ref(["换个头像", "上传图片"]);
 
     function uploadImg(e, num) {
@@ -171,12 +180,22 @@ export default {
       change.changeAvatar = false;
       change.avatar = "";
       option.img = "https://s2.loli.net/2022/05/19/HSvN9qzWC7Luc4y.png";
-      change.username = "";
+      change.username = username;
+    };
+    //使用v-model进行父子组件传值
+    const close = () => {
+      emit("update:activate", false);
+      setTimeout(() => {
+        reset();
+      }, 1000);
     };
     onBeforeUnmount(() => {
-      reset();
+      setTimeout(() => {
+        reset();
+      }, 1000);
     });
     return {
+      props,
       change,
       option,
       Cropper,
@@ -184,6 +203,8 @@ export default {
       avatarMsg,
       changeInfo,
       reset,
+      close,
+
     };
   }
 };

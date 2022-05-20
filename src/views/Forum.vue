@@ -6,8 +6,11 @@
 </template>
 
 <script>
+import Header from "../components/Header";
+
 export default {
-  name: "Forum"
+  name: "Forum",
+  components: {Header}
 };
 </script>
 
