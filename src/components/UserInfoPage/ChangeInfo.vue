@@ -9,7 +9,7 @@
           size="small"
           variant="text"
           color="warning"
-          @click="">
+          @click="reset">
         清空
       </v-btn>
     </v-card-subtitle>
@@ -24,7 +24,7 @@
             @change="uploadImg($event, 1)"
         />
       </div>
-      <div style="height: 12rem; width: 12rem;  margin: 5% auto;">
+      <div v-if="change.changeAvatar" style="height: 12rem; width: 12rem;  margin: 5% auto;">
         <vueCropper
             style="background-repeat: unset"
             ref="Cropper"
@@ -68,10 +68,11 @@
 </template>
 
 <script>
-import {reactive, ref} from "vue";
+import {onBeforeUnmount, reactive, ref} from "vue";
 import "vue-cropper/dist/index.css";
 import {VueCropper} from "vue-cropper";
 import {Msg} from "../../store/Msg";
+import request from "../../utils/apiUtil";
 
 export default {
   name: "ChangeUserInfo",
@@ -137,21 +138,44 @@ export default {
       reader.readAsArrayBuffer(file);//不知道有什么用，但是不能删
     }
 
-    const getImg = () => {
-      Cropper.value.getCropData(data => {
+    function getImg() {
+      return Cropper.value.getCropData(data => {
         return data;
       });
-    };
+    }
+
     const changeInfo = () => {
       if (change.username.length > 10) {
         Msg({
-          message: "字数太多了哦",
+          message: "用户名太长了哦",
           color: "warning"
         });
         return false;
       }
-
+      if (change.username === "" && !change.changeAvatar) {
+        Msg({
+          message: "没有信息变更哦",
+          color: "warning"
+        });
+        return false;
+      }
+      if (change.changeAvatar) {
+        change.avatar = getImg();
+      }
+      request.post("/user/changeinfo", {
+        avatar: change.avatar,
+        username: change.username,
+      });
     };
+    const reset = () => {
+      change.changeAvatar = false;
+      change.avatar = "";
+      option.img = "https://s2.loli.net/2022/05/19/HSvN9qzWC7Luc4y.png";
+      change.username = "";
+    };
+    onBeforeUnmount(() => {
+      reset();
+    });
     return {
       change,
       option,
@@ -159,6 +183,7 @@ export default {
       uploadImg,
       avatarMsg,
       changeInfo,
+      reset,
     };
   }
 };
