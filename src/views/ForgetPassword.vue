@@ -36,14 +36,6 @@
       >
       </v-text-field>
       <v-text-field
-          clearable
-          v-model="user.username"
-          counter="10"
-          maxlength="10"
-          label="用户名"
-      >
-      </v-text-field>
-      <v-text-field
           v-model="user.password"
           type="password"
           label="密码"
@@ -73,7 +65,7 @@
           <v-btn
               size="small"
               variant="outlined"
-              @click="registerValid(form)"
+              @click="infoValid(form)"
           >
             获取验证码
           </v-btn>
@@ -86,10 +78,10 @@
           width="10rem"
           color="success"
           rounded="lg"
-          @click="register(form)"
+          @click="change(form)"
           :disabled="!user.userInfoCheck"
       >
-        注册
+        修改密码
       </v-btn>
     </div>
   </div>
@@ -107,25 +99,25 @@ import {useStore} from "vuex";
 import Header from "../components/Header";
 
 export default {
-  name: "Register",
+  name: "ForgetPassword",
   components: {Header},
   methods: {},
   setup() {
     const form = ref();
     const store = useStore();
-    // const route = useRoute();
-    // let nextUrl;
-    // if (route.query.url) {
-    //   nextUrl = route.query.url;
-    //   Msg({
-    //     showClose: true,
-    //     message: "请先登录哦！",
-    //     color: "info"
-    //   });
-    // }
+    const route = useRoute();
+    let nextUrl;
+    if (route.query.url) {
+      nextUrl = route.query.url;
+      Msg({
+        showClose: true,
+        message: "请先登录哦！",
+        color: "info"
+      });
+    }
     let user = reactive({
       email: "",
-      username: "",
+      uid: 0,
       password: "",
       tmpPassword: "",
       validateCode: "",
@@ -152,7 +144,7 @@ export default {
       request.get("/landr/code", {
         params: {
           email: user.email,
-          method: 1
+          method: 2
         },
         timeout: 30 * 1000
       }).then(res => {
@@ -181,28 +173,21 @@ export default {
       router,
       form,
       user,
-      registerValid(form) {
+      infoValid(form) {
         form.validate().then(res => {
           if (res.valid) {
             request.post("/landr", {
               email: user.email,
-              username: user.username
             }).then(res => {
-              if (res.uid === null) {
+              if (res.uid !== null) {
+                user.uid = res.uid;
                 code();
               }
-              else if (res.email !== null) {
+              else if (res.email === null) {
                 Msg({
                   color: "info",
                   showClose: true,
-                  message: "该邮箱已被注册"
-                });
-              }
-              else if (res.username !== null) {
-                Msg({
-                  color: "info",
-                  showClose: true,
-                  message: "该用户名已被注册"
+                  message: "该邮箱未注册"
                 });
               }
             });
@@ -213,7 +198,7 @@ export default {
           }
         });
       },
-      register(form) {
+      change(form) {
         form.validate().then(res => {
           if (res.valid) {
             if (user.userInfoCheck) {
@@ -235,9 +220,8 @@ export default {
                 }
               }).then(() => {
                 user.userKey = encrypt(user.password);
-                return request.post("/landr/register", {
-                  username: user.username,
-                  email: user.email,
+                return request.post("/landr/password", {
+                  uid: user.uid,
                   userKey: user.userKey,
                 });
               }).then(res => {

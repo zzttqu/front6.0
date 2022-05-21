@@ -46,8 +46,7 @@
           variant="plain"
           size="small"
           color="black"
-          disabled
-          @click="$router.push('/')">
+          @click="$router.push('/password')">
         忘记密码
       </v-btn>
     </v-form>
@@ -105,9 +104,6 @@ export default {
         color: "info"
       });
     }
-    onMounted(() => {
-      user.a = true;
-    });
     let user = reactive({
       userInfo: "",
       password: "",

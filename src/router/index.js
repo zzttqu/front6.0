@@ -54,6 +54,10 @@ const routes = [
     {
         path: "/forum",
         component: () => import("../views/Forum.vue")
+    },
+    {
+        path: "/password",
+        component: () => import("../views/ForgetPassword.vue")
     }
 ];
 
