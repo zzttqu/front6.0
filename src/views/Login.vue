@@ -130,17 +130,22 @@ export default {
                 store.commit("User/login", {
                   uid: res.uid,
                   username: res.username,
-                  likes: res.likes
+                  likes: res.likes,
+                  avatar: res.avatar,
                 });
                 store.commit("setLogin", true);
                 Msg({
                   showClose: true,
-                  message: `欢迎 ${res.username} ,正在跳转...`,
+                  message: `欢迎 ${res.username} ，正在跳转...`,
                   timeout: 1000,
                 });
                 setTimeout(() => {
+                  if (nextUrl === undefined || nextUrl === "") {
+                    nextUrl = "/bbs";
+
+                  }
                   router.push(nextUrl);
-                  nextUrl = "/main";
+                  nextUrl = "/bbs";
                 }, 1000);
               }
             }
@@ -179,7 +184,7 @@ export default {
                   login(res.uid);
                 }
                 else {
-                  Msg(useStore(), {
+                  Msg({
                     color: "warning",
                     showClose: true,
                     message: "该用户名尚未注册"
@@ -187,10 +192,10 @@ export default {
                 }
               });
             }
-            console.log("验证通过");
+            // console.log("验证通过");
           }
           else {
-            console.log("失败");
+            // console.log("失败");
             user.password = "";
             user.userInfo = "";
           }

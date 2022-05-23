@@ -16,7 +16,7 @@
             color="grey-lighten-2"
             width="5rem"
         >
-          邮箱注册
+          邮箱找回
         </v-btn>
         <v-btn
             class="text-grey-darken-4"
@@ -24,7 +24,7 @@
             color="grey-lighten-2"
             width="5rem"
         >
-          手机注册
+          手机找回
         </v-btn>
       </v-btn-toggle>
       <v-text-field
@@ -38,7 +38,7 @@
       <v-text-field
           v-model="user.password"
           type="password"
-          label="密码"
+          label="新密码"
           :rules="[(!user.userInfoCheck?true:v=>!!v||'密码还没填')]"
           maxlength="30"
           clearable
@@ -56,8 +56,8 @@
       <v-text-field
           label="验证码"
           clearable
-          counter="6"
-          maxlength="6"
+          counter="5"
+          maxlength="5"
           :rules="[(!user.userInfoCheck?true:v=>!!v||'验证码还没填')]"
           v-model="user.validateCode"
       >
@@ -148,7 +148,8 @@ export default {
         },
         timeout: 30 * 1000
       }).then(res => {
-        if (res === 1) {
+        //返回的data是2才是正确的密码修改验证码
+        if (res === 2) {
           user.userInfoCheck = true;
           user.codeSend = false;
           Msg({
@@ -189,6 +190,7 @@ export default {
                   showClose: true,
                   message: "该邮箱未注册"
                 });
+                return false;
               }
             });
           }
@@ -228,9 +230,12 @@ export default {
                 if (res.uid !== null) {
                   Msg({
                     showClose: true,
-                    message: "注册成功，正在跳转",
+                    message: "修改成功，正在跳转",
                     color: "success",
                   });
+                  setTimeout(() => {
+                    router.push("/login");
+                  }, 1500);
                 }
               });
             }

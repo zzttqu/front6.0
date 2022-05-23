@@ -39,14 +39,14 @@
         <div class="avatar">
           <img
               class="avatarImg"
-              src="https://s2.loli.net/2022/04/06/9qguvWyIhixYjbF.png"
+              :src="store.state.User.avatar"
               alt="头像"
           />
           <img src="https://s2.loli.net/2022/04/06/9qguvWyIhixYjbF.png" alt="头像"
                class="avatarRound"
           />
         </div>
-        <div class="uandlv text-blue-lighten-1">
+        <div class="uandr text-blue-lighten-1">
           <div class="username">
             {{ store.state.User.username }}
           </div>
@@ -76,6 +76,7 @@ import {ref} from "vue";
 import {useStore} from "vuex";
 import request from "../utils/apiUtil.js";
 import {Msg} from "../store/Msg";
+import router from "../router";
 
 export default {
   name: "NavigationDrawer",
@@ -93,7 +94,12 @@ export default {
             message: "注销成功",
             color: "success"
           });
-          showDrawer();
+          store.commit("setLogin",false)
+          setTimeout(()=>{
+            router.push('/')
+            showDrawer();
+          },500)
+
           return false;
         }
       }).catch(() => {
@@ -136,44 +142,45 @@ export default {
 }
 
 .avatar {
-  flex: 2;
+  width: 50%;
   height: 5rem;
   display: flex;
-  padding-left: 0.5rem;
-
+  padding: 0.5rem;
+  img{
+    width: 4rem;
+    height: 4rem;
+  }
   .avatarImg {
-    margin: 0.8rem 0;
-    padding: 0.5rem;
-    width: 3.4rem;
-    height: 3.4rem;
+    padding: 0.3rem;
     border-radius: 50%;
     z-index: 20;
     position: absolute;
   }
 
   .avatarRound {
-    margin: 0.8rem 0;
-    width: 3.4rem;
-    height: 3.4rem;
     border-radius: 50%;
     z-index: 1;
     position: relative;
   }
 }
 
-.uandlv {
-  flex: 4;
+.uandr {
+  width: 50%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 
-  .level {
-
-  }
-
   .username {
-
+    text-align: center;
+    padding-left: 0.5rem;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .level{
+    text-align: center;
   }
 }
 

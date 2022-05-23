@@ -10,7 +10,7 @@
         <button style="background: none;border: none" @click="">
           <img
               class="avatarImg"
-              src="https://s2.loli.net/2022/04/06/9qguvWyIhixYjbF.png"
+              :src="avatar"
               alt="头像"
           />
           <img src="https://s2.loli.net/2022/04/06/9qguvWyIhixYjbF.png" alt="头像"
@@ -18,10 +18,10 @@
           />
         </button>
       </div>
-      <div class="uandlv text-blue-lighten-1">
-        <div class="username">
+      <div class="username text-blue-lighten-1">
           {{ userInfo.username }}
-        </div>
+      </div>
+      <div class="exp text-blue-lighten-1">
         <div class="level">
             <span>
               Lv.
@@ -30,13 +30,11 @@
               {{ userInfo.level }}
             </span>
         </div>
-      </div>
-      <div class="exp">
         <div style="font-size: 0.6rem">
-          {{ userInfo.exp }}/{{ userInfo.levelExp[userInfo.level] }}
+          {{ userInfo.exp }} / {{ userInfo.levelExp[userInfo.level] }}
         </div>
         <v-progress-linear
-            :model-value="50"
+            :model-value="100*userInfo.exp/userInfo.levelExp[userInfo.level]"
             rounded
             color="light-blue"
             style="height: 0.3rem;width: 70%;"
@@ -125,6 +123,7 @@ export default {
     });
     return {
       userInfo,
+      avatar: store.state.User.avatar
     };
   }
 };
@@ -137,30 +136,23 @@ export default {
 }
 
 .basicInfo {
+  margin-top: 1rem;
   display: flex;
   border: #2196F3 0.2rem solid;
   border-radius: 1rem;
   box-shadow: #E0E0E0 0.2rem 0.2rem 0.2rem;
 }
 
-.uandlv {
+.username {
   flex: 4;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-end;
-
-  .level {
-
-  }
-
-  .username {
-
-  }
+  align-items: center;
 }
 
 .exp {
-  flex: 3;
+  flex:2;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -169,25 +161,25 @@ export default {
 
 .avatar {
   flex: 3;
-  height: 5rem;
+  height: 5.5rem;
   display: flex;
   padding-left: 0.5rem;
 
+  img {
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: 50%;
+  }
+
   .avatarImg {
     margin: 0.5rem;
-    padding: 0.5rem;
-    width: 4rem;
-    height: 4rem;
-    border-radius: 50%;
+    padding: 0.3rem;
     z-index: 20;
     position: absolute;
   }
 
   .avatarRound {
     margin: 0.5rem;
-    width: 4rem;
-    height: 4rem;
-    border-radius: 50%;
     z-index: 1;
     position: relative;
   }

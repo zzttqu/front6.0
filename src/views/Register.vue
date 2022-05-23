@@ -64,8 +64,8 @@
       <v-text-field
           label="验证码"
           clearable
-          counter="6"
-          maxlength="6"
+          counter="5"
+          maxlength="5"
           :rules="[(!user.userInfoCheck?true:v=>!!v||'验证码还没填')]"
           v-model="user.validateCode"
       >
@@ -247,6 +247,9 @@ export default {
                     message: "注册成功，正在跳转",
                     color: "success",
                   });
+                  setTimeout(()=>{
+                    router.push("/login")
+                  },1500)
                 }
               });
             }

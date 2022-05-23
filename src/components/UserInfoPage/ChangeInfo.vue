@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import {onBeforeUnmount, reactive, ref, watch} from "vue";
+import {onBeforeUnmount, reactive, ref} from "vue";
 import "vue-cropper/dist/index.css";
 import {VueCropper} from "vue-cropper";
 import {Msg} from "../../store/Msg";
@@ -87,11 +87,12 @@ export default {
   emits: ["update:activate"],
   setup(props, {emit}) {
     const username = useStore().state.User.username;
+    const store = useStore();
     const Cropper = ref();
     let option = reactive({
       img: "https://s2.loli.net/2022/05/19/HSvN9qzWC7Luc4y.png", // 裁剪图片的地址
       info: true, // 裁剪框的大小信息
-      outputSize: 0.8, // 裁剪生成图片的质量
+      outputSize: 1, // 裁剪生成图片的质量
       outputType: "jpg", // 裁剪生成图片的格式
       autoCrop: true, // 是否默认生成截图框
       autoCropWidth: 100, // 默认生成截图框宽度
@@ -113,6 +114,21 @@ export default {
     // let activate=ref(props.activate)
     let avatarMsg = ref(["换个头像", "上传图片"]);
 
+    async function compressUpload(base64image, quality) {
+      return new Promise(resolve => {
+        let image = new Image();
+        image.src = base64image;
+        image.onload = () => {
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
+          canvas.width = 200;
+          canvas.height = 200;
+          ctx.drawImage(image, 0, 0, 200, 200);
+          resolve(canvas.toDataURL("image/jpeg", quality));
+        };
+      });
+    }
+
     function uploadImg(e, num) {
       //上传图片
       // this.option.img
@@ -121,8 +137,8 @@ export default {
         alert("图片类型必须是,jpeg,jpg,png,bmp中的一种哦");
         return false;
       }
-      if (file.size > 2048 * 1024) {
-        alert("头像不能大于2MB哦");
+      if (file.size > 5 * 1024 * 1024) {
+        alert("头像不能大于5MB哦");
         return false;
       }
       Msg({
@@ -148,11 +164,12 @@ export default {
     }
 
     async function getImg() {
-      return new Promise(resolve => {
+      let data = await new Promise(resolve => {
         Cropper.value.getCropData(data => {
           resolve(data);
         });
       });
+      return await compressUpload(data, 0.9);
     }
 
     const changeInfo = () => {
@@ -172,16 +189,28 @@ export default {
       }
       if (change.changeAvatar) {
         getImg().then(res => {
+          change.avatar = res;
           request.post("/user/updateinfo", {
             username: change.username,
             avatar: res,
+          }).then(res => {
+            if (res === 1) {
+              Msg({
+                message: "修改成功",
+                color: "success",
+              });
+              store.commit("User/updateInfo", {
+                username: change.username,
+                avatar: change.avatar
+              });
+            }
           });
         });
       }
       else {
         request.post("/user/updateinfo", {
           username: change.username,
-          avatar: change.avatar,
+          avatar: "",
         });
       }
     };
@@ -191,6 +220,7 @@ export default {
       option.img = "https://s2.loli.net/2022/05/19/HSvN9qzWC7Luc4y.png";
       change.username = username;
     };
+
     //使用v-model进行父子组件传值
     const close = () => {
       emit("update:activate", false);

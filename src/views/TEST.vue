@@ -1,7 +1,8 @@
 <template>
   <div>
-    <ChangeInfo>
-
+    <ChangeInfo
+        v-model:activate="submitOption.show"
+    >
     </ChangeInfo>
   </div>
 </template>
@@ -16,7 +17,7 @@ export default {
   setup() {
     let submitOption = reactive({
       title: "",
-      show: false,
+      show: true,
       type: 0
     });
     let unread = ref(true);
