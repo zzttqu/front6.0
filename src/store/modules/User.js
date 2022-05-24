@@ -44,6 +44,9 @@ export default {
             state.exp = info.exp;
             state.level = info.level;
             state.expCount = info.count;
+        },
+        setExpCount(state, count) {
+            state.expCount[count.class] = count.count;
         }
     },
 };

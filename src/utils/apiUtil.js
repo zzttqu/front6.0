@@ -9,7 +9,7 @@ let request = axios.create({
     timeout: 10 * 1000,
     withCredentials: true,
 });
-request.defaults.retry = 0;
+request.defaults.retry = 1;
 request.defaults.retryDelay = 2000;
 let requestList = new Set();
 request.interceptors.request.use(config => {

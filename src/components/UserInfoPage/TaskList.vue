@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import {onMounted, reactive, watch, toRef, ref} from "vue";
+import {reactive, watch, toRef, ref} from "vue";
 
 export default {
   name: "TaskTable",
@@ -73,8 +73,6 @@ export default {
         value.exp = 10 * expData.value[currentIndex];
       }, 0);
       loading.value=false
-    });
-    onMounted(() => {
     });
     return {
       submitOption,

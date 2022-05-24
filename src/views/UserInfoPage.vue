@@ -123,6 +123,8 @@ export default {
       userInfo,
       store,
     };
+  },
+  created() {
   }
 };
 </script>

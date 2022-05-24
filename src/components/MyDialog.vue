@@ -45,6 +45,7 @@
         </v-btn>
         <v-btn
             color="blue"
+            @click="validate"
         >
           提交
         </v-btn>
@@ -56,13 +57,16 @@
 <script>
 import {reactive, ref, watch} from "vue";
 import ImgUpload from "./MyInput/ImgUpload";
+import axios from "axios";
+import request from "../utils/apiUtil";
+import {useStore} from "vuex";
 //todo 如果新组件调好了需要换text组件
 
 export default {
   name: "MyDialog",
   components: {ImgUpload},
   props: ["options", "show"],
-  emits:['update:options'],
+  emits: ["update:options"],
   setup(props) {
     const options = reactive(props.options);
     let dialog = ref(props.show);
@@ -77,18 +81,30 @@ export default {
         imgUpload.value.clear();
       }
     };
-    const validate=()=>{
-      if (content){
 
-      }
+    function upload() {
+      request.post("/dialog/create", {
+        text: content.value,
+      }).then(res => {
+        // store.commit("User/setExpCount", {class: 1, count: res});
+        content.value = "";
+        options.show = false;
+      });
     }
+
+    const validate = () => {
+      if (content.value !== "") {
+        upload();
+      }
+    };
     return {
       props,
       dialog,
       content,
       options,
       flush,
-      imgUpload
+      imgUpload,
+      validate
     };
   }
 };

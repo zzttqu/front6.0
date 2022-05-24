@@ -25,7 +25,7 @@
     <v-btn
         icon="mdi-plus"
         class="submit bg-orange text-grey-lighten-4"
-        @click="img"
+        @click="text"
     >
     </v-btn>
   </div>
@@ -36,28 +36,55 @@ import Header from "../components/Header";
 import BackToTop from "../components/BackToTop";
 import {reactive} from "vue";
 import MyDialog from "../components/MyDialog";
+import {useStore} from "vuex";
+import {Msg} from "../store/Msg";
+import request from "../utils/apiUtil";
 
 export default {
   name: "BBSPage",
   components: {Header, BackToTop, MyDialog},
   setup() {
+    const store = useStore();
     let submitOption = reactive({
       title: "",
       show: false,
       type: 0
     });
     const img = () => {
-      submitOption.show = true;
-      submitOption.type = 1;
-      submitOption.title = "你的美图";
+      if (store.state.isLogin) {
+        submitOption.show = true;
+        submitOption.type = 1;
+        submitOption.title = "你的美图";
+      }
+      else {
+        Msg({
+          message: "未登录不能发表哦",
+          color: "warning"
+        });
+      }
     };
     const text = () => {
       submitOption.show = true;
       submitOption.type = 0;
       submitOption.title = "你的留言";
     };
+    let dialog = reactive({
+      page: 1
+    });
+
+    function getDialog() {
+      request.get("dialog", {
+        params: {
+          number: dialog.page
+        }
+      }).then(res=>{
+
+      })
+      ;
+    }
+
     return {
-      submitOption: submitOption,
+      submitOption,
       img,
       text,
     };
