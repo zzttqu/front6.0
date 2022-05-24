@@ -95,11 +95,14 @@ export default {
             color: "success"
           });
           store.commit("setLogin",false)
+          //todo 这里还需要优化
           setTimeout(()=>{
             router.push('/')
             showDrawer();
-          },500)
-
+            setTimeout(()=>{
+              router.go(0)
+            },500)
+          },1300)
           return false;
         }
       }).catch(() => {

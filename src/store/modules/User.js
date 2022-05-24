@@ -26,8 +26,9 @@ export default {
         changeInfo(state, info) {
             state.username = info.username;
         },
-        signInStatus(state, status) {
-            state.isSignIn = status;
+        signIn(state, info) {
+            state.isSignIn = info.isSignIn;
+            state.exp += info.exp;
         },
         login(state, status) {
             state.uid = status.uid;

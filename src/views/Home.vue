@@ -5,7 +5,7 @@
       都有
     </div>
     <v-btn
-        @click="$router.push('/login')"
+        @click="$router.push('/bbs')"
         class="font-weight-black text-center to-main"
         elevation="0"
         variant="outlined"

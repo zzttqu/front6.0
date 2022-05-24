@@ -10,7 +10,7 @@
         <button style="background: none;border: none" @click="">
           <img
               class="avatarImg"
-              :src="avatar"
+              :src="store.state.User.avatar"
               alt="头像"
           />
           <img src="https://s2.loli.net/2022/04/06/9qguvWyIhixYjbF.png" alt="头像"
@@ -19,7 +19,7 @@
         </button>
       </div>
       <div class="username text-blue-lighten-1">
-          {{ userInfo.username }}
+        {{ userInfo.username }}
       </div>
       <div class="exp text-blue-lighten-1">
         <div class="level">
@@ -27,14 +27,14 @@
               Lv.
             </span>
           <span>
-              {{ userInfo.level }}
+              {{ store.state.User.level }}
             </span>
         </div>
         <div style="font-size: 0.6rem">
-          {{ userInfo.exp }} / {{ userInfo.levelExp[userInfo.level] }}
+          {{ store.state.User.exp }} / {{ userInfo.levelExp[store.state.User.level] }}
         </div>
         <v-progress-linear
-            :model-value="100*userInfo.exp/userInfo.levelExp[userInfo.level]"
+            :model-value="100*store.state.User.exp/userInfo.levelExp[store.state.User.level]"
             rounded
             color="light-blue"
             style="height: 0.3rem;width: 70%;"
@@ -80,8 +80,6 @@ export default {
     let userInfo = reactive({
       uid: store.state.User.uid,
       username: store.state.User.username,
-      level: 0,
-      exp: 0,
       levelExp: [0, 200, 1500, 4500, 10800, 28800],
       count: [1, 1, 1, 1],
       changeInfo: false,
@@ -123,7 +121,7 @@ export default {
     });
     return {
       userInfo,
-      avatar: store.state.User.avatar
+      store,
     };
   }
 };
@@ -152,7 +150,7 @@ export default {
 }
 
 .exp {
-  flex:2;
+  flex: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -163,7 +161,6 @@ export default {
   flex: 3;
   height: 5.5rem;
   display: flex;
-  padding-left: 0.5rem;
 
   img {
     width: 4.5rem;

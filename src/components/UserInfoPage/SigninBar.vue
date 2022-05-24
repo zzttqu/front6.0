@@ -4,7 +4,8 @@
     <div
         :class="'item animate__animated '+(index===animate.index?animate.list[animate.num]:'')"
         v-for="(day,index) in daysData.days">
-      <button :class="'day '+((index===totalDays-1)&&(!store.state.User.isSignIn)?'red-dot':'')" :disabled="day.flag===1" @click="signIn(index)">
+      <button :class="'day '+((index===daysData.signInDays)&&(!store.state.User.isSignIn)?'red-dot':'')"
+              :disabled="day.flag===1" @click="signIn(index)">
         <img class="front" src="/level/01.svg" alt="图片"/>
         <img class="back" src="/level/checkmark-circle.svg" :style="'opacity: '+(day.flag===1?1:0)+';'"
              alt="图片"/>
@@ -66,12 +67,15 @@ export default {
           index: -1,
         }
     );
-    let totalDays = ref(0);
     onMounted(() => {
       request.get("/user/signinlist").then(res => {
-        daysData.days = res;
+        daysData.days = res.data;
+        if (res.status === 0) {
+          //如果今天已经签到了就去除红点
+          store.commit("User/signIn", {isSignIn: true, exp: 0});
+        }
         //获得当前已签到多少天，之后签到成功后+1天
-        totalDays.value = daysData.days.reduce((total, currentValue) => {
+        daysData.days.reduce((total, currentValue) => {
           if (currentValue.flag === 0 && total === 0) {
             daysData.signInDays = currentValue.day - 1;
             total += 1;
@@ -84,7 +88,6 @@ export default {
       });
     });
     return {
-      totalDays,
       daysData,
       animate,
       store,
@@ -100,13 +103,12 @@ export default {
               daysData.signInDays += 1;
               daysData.days[index].flag = 1;
               daysData.signInStatus = true;
-              store.commit("User/signInStatus", true);
+              store.commit("User/signIn", {isSignIn: true, exp: res});
               Msg({
                 showClose: true,
                 message: "签到成功咯",
                 color: "success"
               });
-              emit("updateExp", res);
             }
             else {
               daysData.signInStatus = true;
