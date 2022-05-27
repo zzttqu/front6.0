@@ -8,12 +8,12 @@
           <div class="title">{{img.title}}</div>
         </v-card>
       </div>
-<!--      <div class="column">-->
-<!--        <v-card class="card" v-for="(img,index) in imgUrl.slice(imgUrl.length/2,imgUrl.length)" @click="ab">-->
-<!--          <img :src="img.url">-->
-<!--          <div class="title">{{img.title}}</div>-->
-<!--        </v-card>-->
-<!--      </div>-->
+      <div class="column">
+        <v-card class="card" v-for="(img,index) in imgUrl.slice(1,imgUrl.length)" @click="ab">
+          <img :src="img.url">
+          <div class="title">{{img.title}}</div>
+        </v-card>
+      </div>
     </div>
   </div>
 </template>
@@ -58,13 +58,13 @@ export default {
 
 <style scoped lang="scss">
 .row {
+  display: flex;
   background-color: #BBDEFB;
 }
 
 .column {
-  display: flex;
-  flex-flow: row wrap;
-  align-content: space-between;
+  flex: 50%;
+  max-width: 50%;
   padding: 0 0.2rem;
   > .v-card {
     margin-top: 0.5rem;
