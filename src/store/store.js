@@ -21,14 +21,13 @@ export default createStore({
         }
     },
     actions: {
-        checkUserStatus({commit}) {
+        checkLogin({commit}) {
             request.get(`/landr/check`).then(res => {
                 if (res === 1) {
                     commit("checkLogin", true);
                 }
                 else {
                     commit("checkLogin", false);
-                    // router.push('/login')
                 }
             });
         },

@@ -97,6 +97,16 @@ export default {
         upload();
       }
     };
+
+    function getDialog() {
+      request.get("/dialog", {
+        params: {
+          number: 1
+        }
+      });
+
+    }
+
     return {
       props,
       dialog,

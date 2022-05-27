@@ -26,7 +26,6 @@
         讨论区
       </v-list-item>
       <v-list-item
-          disabled=""
           to="/gallery"
       >
         图片区
