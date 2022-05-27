@@ -3,15 +3,36 @@
     <Header></Header>
     <div class="row">
       <div class="column">
-        <v-card tag="div" class="card" v-for="(img,index) in imgUrl" @click="ab">
+        <v-card tag="div" v-for="(img,index) in imgUrlA" @click="ab" class="animate__animated animate__fadeIn">
+          <v-progress-circular
+              v-if="img.url===undefined"
+              indeterminate=""
+              color="grey"
+              class="loading"
+          >
+          </v-progress-circular>
           <img :src="img.url"/>
-          <div class="title">{{img.title}}</div>
+          <div class="title">{{ img.title }}</div>
+        </v-card>
+        <div ref="positionA">
+        </div>
+        <v-card class="load-more" v-if="heightDiff<=0" :height="-heightDiff-10" @click="ab">
+          <div>
+            <v-icon style="font-size: 3rem">mdi-dots-horizontal</v-icon>
+          </div>
         </v-card>
       </div>
       <div class="column">
-        <v-card class="card" v-for="(img,index) in imgUrl.slice(1,imgUrl.length)" @click="ab">
+        <v-card v-for="(img,index) in imgUrlB" @click="ab">
           <img :src="img.url">
-          <div class="title">{{img.title}}</div>
+          <div class="title">{{ img.title }}</div>
+        </v-card>
+        <div ref="positionB">
+        </div>
+        <v-card class="load-more" v-if="heightDiff>0" :height="heightDiff-10" @click="ab">
+          <div>
+            <v-icon style="font-size: 3rem">mdi-dots-horizontal</v-icon>
+          </div>
         </v-card>
       </div>
     </div>
@@ -20,29 +41,62 @@
 
 <script>
 import Header from "../components/Header";
-import {ref} from "vue";
+import {nextTick, onMounted, ref} from "vue";
+import axios from "axios";
 
 
 export default {
   name: "Gallery",
   components: {Header},
   setup() {
-    const imgUrl = ref([
-      {url: "https://i.loli.net/2021/10/15/UaueVTkfrHwCjiM.jpg", title: "title"},
-      {url: "https://s2.loli.net/2022/01/21/iPB2rjVqoewm9yn.jpg", title: "123"},
-      {
-        url: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fwww.veeqi.com%2Fd%2Ffile%2Fgl%2F20200116%2Fbd7345c50e8c16e1cb2493a10dd1a502.png&refer=http%3A%2F%2Fwww.veeqi.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1656222706&t=06b5537a38fd9673de094f31d36b5df4",
-        title: "中文"
-      },
-      {
-        url: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimage.9game.cn%2F2020%2F6%2F5%2F162117173.jpg&refer=http%3A%2F%2Fimage.9game.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1656222734&t=21f82d6370ca27a6a29bb6b9b5419ba1",
-        title: "汉语"
-      },
-      {
-        url: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fupload.hxnews.com%2F2021%2F0706%2F1625556949411.jpg&refer=http%3A%2F%2Fupload.hxnews.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1656222754&t=2ebbbde37a676b9808907759960adc57",
-        title: "中文"
-      },
-    ]);
+    let positionA = ref();
+    let positionB = ref();
+    let heightDiff = ref();
+    onMounted(() => {
+      //从后端获取图片的地址
+      axios.get("https://i.loli.net/2021/10/15/UaueVTkfrHwCjiM.jpg").then(() => {
+        let a = [
+          {url: "https://s2.loli.net/2022/01/21/iPB2rjVqoewm9yn.jpg", title: "123"},
+          {url: "https://i.loli.net/2021/10/15/UaueVTkfrHwCjiM.jpg", title: "title"},
+          {url: "https://i.loli.net/2021/10/15/UaueVTkfrHwCjiM.jpg", title: "title"},
+          {url: "https://s2.loli.net/2022/01/21/iPB2rjVqoewm9yn.jpg", title: "123"},
+          {url: "https://s2.loli.net/2022/01/21/iPB2rjVqoewm9yn.jpg", title: "123"},
+        ];
+        //创建图片的缓存并缓存
+        const images = a.map(imgSrc => {
+          return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.src = imgSrc.url;
+            img.onload = resolve;
+            img.onerror = reject;
+          });
+        });
+        //缓存结束后再分列展示
+        Promise.all(images).then(res => {
+          spliceImg(a);
+          nextTick(() => {
+            heightDiff.value = positionA.value.getBoundingClientRect().y - positionB.value.getBoundingClientRect().y;
+          });
+        });
+
+      });
+    });
+
+    let imgUrlA = ref([{}, {}, {}, {}]);
+    let imgUrlB = ref([{}, {}, {}, {}]);
+
+    function spliceImg(imgList) {
+      imgUrlB.value = [];
+      imgUrlA.value = [];
+      imgList.filter((value, index) => {
+        if (index % 2 === 0) {
+          imgUrlA.value.push(value);
+        }
+        else {
+          imgUrlB.value.push(value);
+        }
+      });
+    }
 
     function ab() {
       alert("123");
@@ -50,7 +104,11 @@ export default {
 
     return {
       ab,
-      imgUrl,
+      imgUrlA,
+      imgUrlB,
+      positionA,
+      positionB,
+      heightDiff,
     };
   }
 };
@@ -60,14 +118,27 @@ export default {
 .row {
   display: flex;
   background-color: #BBDEFB;
+  height: 100%;
 }
 
 .column {
   flex: 50%;
   max-width: 50%;
   padding: 0 0.2rem;
+
   > .v-card {
     margin-top: 0.5rem;
+    border-radius: 0.5rem;
+    min-height: 5rem;
+  }
+
+  .loading {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
   }
 
   img {
@@ -77,11 +148,17 @@ export default {
   }
 }
 
+.load-more {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
 .title {
   overflow: hidden;
-  font-size: 0.8rem;
-  height: 1.4rem;
-  text-indent: 0.7rem;
+  height: 2rem;
+  text-indent: 1rem;
   text-overflow: ellipsis;
   white-space: nowrap;
   font-weight: 700;
