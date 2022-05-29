@@ -31,6 +31,21 @@ export default {
   components: {MessageBar, NavigationDrawer},
   setup() {
 
+    document.onkeydown = () => {
+      document.addEventListener('contextmenu', function(event){
+        return event.returnValue = false
+      })
+      //禁用F12
+      if (window.event && window.event.keyCode === 123) {
+        return false;
+        //禁用ctrl+shift+i,
+      } else if (window.event.ctrlKey && window.event.shiftKey && window.event.keyCode === 73) {
+        return false;
+        //屏蔽Shift+F10
+      } else if (window.event.shiftKey && window.event.keyCode === 121) {
+        return false;
+      }
+    };
     let drawerRef = ref();
     const showDrawer = () => {
       // drawer.value=!drawer.value

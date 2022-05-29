@@ -3,121 +3,147 @@
     <Header></Header>
     <div class="row">
       <div class="column">
-        <v-card tag="div" v-for="(img,index) in imgUrlA" @click="ab" class="animate__animated animate__fadeIn">
+        <img src="https://i.ibb.co/5r4699G/1634294271735-2.jpg"/>
+        <img src="https://i.ibb.co/Ht4V22B/1634294271735-2.jpg"/>
+        <v-card tag="div" v-for="(post,index) in postL" @click="moreInfo(post.id)" class="animate__animated animate__fadeIn">
           <v-progress-circular
-              v-if="img.loading===true"
+              v-if="post.loading===true"
               indeterminate=""
               color="grey"
               class="loading"
           >
           </v-progress-circular>
-          <img :src="img.url" @load="imgLoad();img.loading=false" alt="展示图片缩略图"/>
-          <div class="title">{{ img.title }}</div>
+          <img :src="post.img.path" @load="imgLoad();post.loading=false" alt="展示图片缩略图"/>
+          <div class="title">{{ post.title }}</div>
         </v-card>
         <div ref="positionA">
         </div>
-        <v-card class="load-more animate__animated animate__fadeIn" v-if="heightDiff<=0" :height="-heightDiff-10"
-                @click="ab">
+        <v-card class="load-more animate__animated animate__fadeIn" v-if="heightDiff<=0" :height="(-heightDiff)-10"
+                @click="loadMore">
           <div>
             <v-icon style="font-size: 3rem">mdi-dots-horizontal</v-icon>
           </div>
         </v-card>
       </div>
       <div class="column">
-        <v-card v-for="(img,index) in imgUrlB" @click="ab">
+        <v-card tag="div" v-for="(post,index) in postR" @click="moreInfo(post.id)" class="animate__animated animate__fadeIn">
           <v-progress-circular
-              v-if="img.loading===true"
+              v-if="post.loading===true"
               indeterminate=""
               color="grey"
               class="loading"
           >
           </v-progress-circular>
-          <img :src="img.url" @load="imgLoad();img.loading=false" alt="展示图片缩略图"/>
-          <div class="title">{{ img.title }}</div>
+          <img :src="post.img.path" @load="imgLoad();post.loading=false" alt="展示图片缩略图"/>
+          <div class="title">{{ post.title }}</div>
         </v-card>
         <div ref="positionB">
         </div>
         <v-card class="load-more animate__animated animate__fadeIn" v-if="heightDiff>0" :height="heightDiff-10"
-                @click="ab">
+                @click="loadMore">
           <div>
             <v-icon style="font-size: 3rem">mdi-dots-horizontal</v-icon>
           </div>
         </v-card>
       </div>
     </div>
+    <BackToTop></BackToTop>
+    <MyDialog :options="submitOption"></MyDialog>
+    <v-btn
+        icon="mdi-plus"
+        class="submit bg-orange text-grey-lighten-4 animate__animated animate__fadeIn"
+        @click="img"
+    >
+    </v-btn>
   </div>
 </template>
 
 <script>
 import Header from "../components/Header";
-import {onMounted, ref} from "vue";
-import axios from "axios";
+import {onMounted, reactive, ref} from "vue";
+import request from "../utils/apiUtil";
+import BackToTop from "../components/BackToTop";
+import MyDialog from "../components/MyDialog";
+import {Msg} from "../store/Msg";
+import {useStore} from "vuex";
 
 
 export default {
   name: "Gallery",
-  components: {Header},
+  components: {Header, BackToTop, MyDialog},
   setup() {
+    const store=useStore()
     let positionA = ref();
     let positionB = ref();
     let heightDiff = ref();
     let loading = ref(0);
+    let submitOption = reactive({
+      title: "",
+      show: false,
+      type: 0
+    });
     onMounted(() => {
       //从后端获取图片的地址
-      axios.get("https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fyaya-img.diqiu00.com%2Fuploads%2Fimage%2F20211127%2F1637975574594597.jpg&refer=http%3A%2F%2Fyaya-img.diqiu00.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1656295896&t=7383fa9b852c6ed4fd6ec60fa179dc07").then(() => {
-        let a = [
-          {url: "https://s2.loli.net/2022/01/21/iPB2rjVqoewm9yn.jpg", title: "123"},
-          {url: "https://i.loli.net/2021/10/15/UaueVTkfrHwCjiM.jpg", title: "title"},
-        ];
-        a.reduce((total, value) => {
+      request.get("/post",{
+        params:{
+          number:0
+        }
+      }).then((res) => {
+        res.reduce((total, value) => {
           value.loading = true;
         }, 0);
-        spliceImg(a);
-        //创建图片的缓存并缓存，这个是得在别的页面提前加载这个页面的才有用
-        // const images = a.map(imgSrc => {
-        //   return new Promise((resolve, reject) => {
-        //     const img = new Image();
-        //     img.src = imgSrc.url;
-        //     img.onload = resolve;
-        //     img.onerror = reject;
-        //   });
-        // });
-        // 缓存结束后再分列展示
-        // Promise.all(images).then(res => {
-        //
-        // });
+        spliceImg(res);
       });
     });
 
-    let imgUrlA = ref([]);
-    let imgUrlB = ref([]);
+    let postL = ref([]);
+    let postR = ref([]);
 
     function spliceImg(imgList) {
       imgList.filter((value, index) => {
         if (index % 2 === 0) {
-          imgUrlA.value.push(value);
+          postL.value.push(value);
         }
         else {
-          imgUrlB.value.push(value);
+          postR.value.push(value);
         }
       });
     }
 
-    function ab() {
-      alert("123");
+    function moreInfo(id) {
+      //获取点击的id传到后端获取更加详细的信息，包括上传的更多图片
+      // console.log(id)
     }
 
+
     return {
-      ab,
-      imgUrlA,
-      imgUrlB,
+      moreInfo,
+      postL: postL,
+      postR: postR,
       positionA,
       positionB,
       heightDiff,
       loading,
+      submitOption,
+      loadMore(){
+        console.log("loadMore")
+      },
+      img(){
+        // if (store.state.isLogin) {
+          submitOption.show = true;
+          submitOption.type = 1;
+          submitOption.title = "你的美图";
+        // }
+        // else {
+        //   Msg({
+        //     message: "未登录不能发表哦",
+        //     color: "warning"
+        //   });
+        // }
+      },
       imgLoad() {
         loading.value += 1;
-        if (loading.value === imgUrlA.value.length + imgUrlB.value.length) {
+        if (loading.value === postL.value.length + postR.value.length) {
           // console.log("图片全部加载完毕");
           heightDiff.value = positionA.value.getBoundingClientRect().y - positionB.value.getBoundingClientRect().y;
           // console.log(heightDiff.value);
@@ -138,12 +164,12 @@ export default {
 .column {
   flex: 50%;
   max-width: 50%;
-  padding: 0 0.2rem;
+  padding: 0.5rem 0.2rem;
 
   > .v-card {
     margin-top: 0.5rem;
     border-radius: 0.5rem;
-    min-height: 5rem;
+    min-height: 4rem;
   }
 
   .loading {
@@ -182,5 +208,11 @@ export default {
   display: flex;
   flex-wrap: wrap;
   padding: 0 0.2rem;
+}
+.submit {
+  position: fixed;
+  z-index: 500;
+  bottom: 1rem;
+  right: 1rem;
 }
 </style>

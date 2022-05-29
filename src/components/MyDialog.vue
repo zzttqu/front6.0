@@ -18,24 +18,22 @@
         </v-btn>
       </v-card-subtitle>
       <div class="dialog-main">
+        <ImgUpload ref="imgUpload" v-if="props.options.type===1">
+        </ImgUpload>
+        <v-text-field
+            label="图片标题"
+            v-model="content"
+            counter="50"
+            :rules="[v=>v.length<50||'字数太多啦']"
+        >
+        </v-text-field>
         <v-textarea
-            v-if="props.options.type===0"
+            label="图片描述"
             v-model="content"
             counter="200"
             :rules="[v=>v.length<200||'字数太多啦']"
         >
         </v-textarea>
-        <div v-if="props.options.type===1">
-          <ImgUpload ref="imgUpload">
-          </ImgUpload>
-          <v-text-field
-              label="图片描述"
-              v-model="content"
-              counter="50"
-              :rules="[v=>v.length<50||'字数太多啦']"
-          >
-          </v-text-field>
-        </div>
       </div>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -83,13 +81,17 @@ export default {
     };
 
     function upload() {
-      request.post("/dialog/create", {
-        text: content.value,
-      }).then(res => {
-        // store.commit("User/setExpCount", {class: 1, count: res});
-        content.value = "";
-        options.show = false;
+      let a=imgUpload.value.ImgSubmit().then(res=>{
+        console.log(a)
       });
+      // console.log(a)
+      // request.post("/dialog/create", {
+      //   text: content.value,
+      // }).then(res => {
+      //   // store.commit("User/setExpCount", {class: 1, count: res});
+      //   content.value = "";
+      //   options.show = false;
+      // });
     }
 
     const validate = () => {

@@ -43,9 +43,10 @@
 <script>
 
 
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import {Msg} from "../../store/Msg";
 import request from "../../utils/apiUtil";
+import axios from "axios";
 
 
 export default {
@@ -55,6 +56,7 @@ export default {
     let fileUrl = ref([]);
     let percent = ref(0);
     let uploadImg = ref([]);
+    let imgUrl=ref([]);
 
     //图片格式，大小，数量的校验
     function imgValid(files) {
@@ -82,7 +84,7 @@ export default {
             });
             return false;
           }
-          else if ((file.size / 1024 / 1024) > 2) {
+          else if ((file.size / 1024 / 1024) > 5) {
             Msg({
               showClose: true,
               message: "文件太大了，装不下啦",
@@ -133,27 +135,42 @@ export default {
 
     //图片上传到服务器
     async function ImgSubmit() {
-      const formData = new FormData();
       if (uploadImg.value.length > 0) {
         for (const img of uploadImg.value) {
-          formData.append("file", img);
+          await postImg(img).then(res => {
+            imgUrl.value.push({
+              raw:res.data.data.image.url,
+              thumb:res.data.data.thumb.url,
+            })
+          });
         }
-        return await request.post("dialog/img", formData, {
-          onUploadProgress: (progressEvent => {
-            percent.value = Math.round(progressEvent.loaded * 100 / progressEvent.total);
-            if (percent.value > 100) {
-              percent.value = 100;
-            }
-          })
-        }).then(res => {
-          clear();
-          return res;
-        });
+         imgUrl.value
       }
       else {
         return 0;
       }
     }
+    async function postImg(img) {
+      return await axios.post("https://api.imgbb.com/1/upload", {
+        image: img,
+        key: "0f15cf185d61e22eba6a50f4ee08493f",
+      }, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        },
+        onUploadProgress: (progressEvent => {
+          percent.value = Math.round(progressEvent.loaded * 100 / progressEvent.total);
+          if (percent.value > 100) {
+            percent.value = 100;
+          }
+        })
+      })
+    }
+    watch(imgUrl.value,value => {
+      if (imgUrl.value.length===fileUrl.value.length){
+        clear()
+      }
+    })
 
     //图片删除
     function delImg(index) {
@@ -169,7 +186,9 @@ export default {
       delImg,
       percent,
       uploadImg,
-      clear
+      clear,
+      ImgSubmit,
+      imgUrl
     };
   },
 
