@@ -21,15 +21,15 @@
         <ImgUpload ref="imgUpload" v-if="props.options.type===1">
         </ImgUpload>
         <v-text-field
-            label="图片标题"
-            v-model="content"
+            label="标题"
+            v-model="post.title"
             counter="50"
-            :rules="[v=>v.length<50||'字数太多啦']"
+            :rules="[v=>v.length<10||'字数太多啦']"
         >
         </v-text-field>
         <v-textarea
-            label="图片描述"
-            v-model="content"
+            :label="props.options.type===1?'图片描述':'内容'"
+            v-model="post.text"
             counter="200"
             :rules="[v=>v.length<200||'字数太多啦']"
         >
@@ -55,9 +55,8 @@
 <script>
 import {reactive, ref, watch} from "vue";
 import ImgUpload from "./MyInput/ImgUpload";
-import axios from "axios";
 import request from "../utils/apiUtil";
-import {useStore} from "vuex";
+import {Msg} from "../store/Msg";
 //todo 如果新组件调好了需要换text组件
 
 export default {
@@ -68,51 +67,62 @@ export default {
   setup(props) {
     const options = reactive(props.options);
     let dialog = ref(props.show);
-    let content = ref("");
+    let post = reactive({
+      title: "",
+      text: "",
+    });
     const imgUpload = ref(null);
     watch(props.options, () => {
       dialog.value = props.options.show;
     });
     const flush = () => {
-      content.value = "";
+      post.title = "";
+      post.text = "";
       if (imgUpload.value !== null) {
         imgUpload.value.clear();
       }
     };
 
-    function upload() {
-      let a=imgUpload.value.ImgSubmit().then(res=>{
-        console.log(a)
-      });
+    async function upload() {
+      if (props.options.type === 1) {
+        post.img = await imgUpload.value.ImgSubmit().then(res => {
+          return res;
+        });
+        request.post("/post/create", post).then(res => {
+          console.log(res);
+        });
+      }
+
       // console.log(a)
       // request.post("/dialog/create", {
-      //   text: content.value,
+      //   text: post.value,
       // }).then(res => {
       //   // store.commit("User/setExpCount", {class: 1, count: res});
-      //   content.value = "";
+      //   post.value = "";
       //   options.show = false;
       // });
     }
 
     const validate = () => {
-      if (content.value !== "") {
+      if (post.title !== "") {
         upload();
+      }
+      else {
+        Msg({
+          message: "还没填东西哦",
+          color: "warning"
+        });
       }
     };
 
-    function getDialog() {
-      request.get("/dialog", {
-        params: {
-          number: 1
-        }
-      });
+    function submitPost() {
 
     }
 
     return {
       props,
       dialog,
-      content,
+      post,
       options,
       flush,
       imgUpload,

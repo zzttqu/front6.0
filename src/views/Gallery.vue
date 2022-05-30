@@ -3,17 +3,15 @@
     <Header></Header>
     <div class="row">
       <div class="column">
-        <img src="https://i.ibb.co/5r4699G/1634294271735-2.jpg"/>
-        <img src="https://i.ibb.co/Ht4V22B/1634294271735-2.jpg"/>
-        <v-card tag="div" v-for="(post,index) in postL" @click="moreInfo(post.id)" class="animate__animated animate__fadeIn">
+        <v-card tag="div" v-for="(post,index) in postL" @click="getMoreInfo(post.id)" class="animate__animated animate__fadeIn">
           <v-progress-circular
-              v-if="post.loading===true"
+              v-if="post.loading"
               indeterminate=""
               color="grey"
               class="loading"
           >
           </v-progress-circular>
-          <img :src="post.img.path" @load="imgLoad();post.loading=false" alt="展示图片缩略图"/>
+          <img :src="post.img" @load="imgLoad();post.loading=false" alt="展示图片缩略图"/>
           <div class="title">{{ post.title }}</div>
         </v-card>
         <div ref="positionA">
@@ -26,7 +24,7 @@
         </v-card>
       </div>
       <div class="column">
-        <v-card tag="div" v-for="(post,index) in postR" @click="moreInfo(post.id)" class="animate__animated animate__fadeIn">
+        <v-card tag="div" v-for="(post,index) in postR" @click="getMoreInfo(post.id)" class="animate__animated animate__fadeIn">
           <v-progress-circular
               v-if="post.loading===true"
               indeterminate=""
@@ -34,7 +32,7 @@
               class="loading"
           >
           </v-progress-circular>
-          <img :src="post.img.path" @load="imgLoad();post.loading=false" alt="展示图片缩略图"/>
+          <img :src="post.img" @load="imgLoad();post.loading=false" alt="展示图片缩略图"/>
           <div class="title">{{ post.title }}</div>
         </v-card>
         <div ref="positionB">
@@ -91,6 +89,8 @@ export default {
       }).then((res) => {
         res.reduce((total, value) => {
           value.loading = true;
+          value.img=value.img[0].raw
+          console.log(value.img)
         }, 0);
         spliceImg(res);
       });
@@ -110,14 +110,14 @@ export default {
       });
     }
 
-    function moreInfo(id) {
+    function getMoreInfo(id) {
       //获取点击的id传到后端获取更加详细的信息，包括上传的更多图片
       // console.log(id)
     }
 
 
     return {
-      moreInfo,
+      getMoreInfo,
       postL: postL,
       postR: postR,
       positionA,
