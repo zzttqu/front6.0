@@ -86,10 +86,10 @@ export default {
     async function upload() {
       if (props.options.type === 1) {
         post.img = await imgUpload.value.ImgSubmit().then(res => {
+          console.log(res)
           return res;
         });
         request.post("/post/create", post).then(res => {
-          console.log(res);
         });
       }
 

@@ -7,9 +7,9 @@
         enter-active-class="animate__animated animate__bounceIn"
         leave-active-class="animate__animated animate__bounceOut"
     >
-      <li class="previewImg" v-for="(item, index) in fileUrl" :key="index">
+      <li class="previewImg" v-for="(item, index) in uploadImg" :key="index">
         <span class="cancel-btn" @click="delImg(index)"><i class="iconfont">&#xe631;</i></span>
-        <img :src="item" alt="">
+        <img :src="item.fileUrl" alt="">
       </li>
       <div class="addBox" v-if="uploadImg.length<3">
         <i class="iconfont">&#xe674;</i>
@@ -33,8 +33,8 @@
           v-model="percent"
           striped
           height="10px"
+          color="blue"
           rounded>
-
       </v-progress-linear>
     </transition>
     <!--        <button @click="ImgSubmit">点击上传</button>-->
@@ -43,20 +43,17 @@
 <script>
 
 
-import {ref, watch} from "vue";
+import {ref} from "vue";
 import {Msg} from "../../store/Msg";
-import request from "../../utils/apiUtil";
-import axios from "axios";
+import {cos} from "../../utils/uploadUtil";
 
 
 export default {
   name: "ImgUpload",
   setup() {
     let inputFiles = ref(null);
-    let fileUrl = ref([]);
     let percent = ref(0);
     let uploadImg = ref([]);
-    let imgUrl=ref([]);
 
     //图片格式，大小，数量的校验
     function imgValid(files) {
@@ -107,7 +104,6 @@ export default {
       uploadImg.value = [];
       inputFiles.value = null;
       percent.value = 0;
-      fileUrl.value = [];
     }
 
     function getImg($event) {
@@ -125,70 +121,107 @@ export default {
           //这行是负责显示在用户界面的
           //图片保存到本地转为blob对象加快解析速度
           //转blob，因为blob是同步的，reader循环会报错
-          fileUrl.value.push(URL.createObjectURL(file));
           //这行是准备上传的数组
-          uploadImg.value.push(file);
+          uploadImg.value.push({file: file, fileUrl: URL.createObjectURL(file)});
           // reader.readAsDataURL(file);
         }
       }
     }
 
-    //图片上传到服务器
+    //图片上传到我的cos
     async function ImgSubmit() {
       if (uploadImg.value.length > 0) {
-        for (const img of uploadImg.value) {
-          await postImg(img).then(res => {
-            imgUrl.value.push({
-              raw:res.data.data.image.url,
-              thumb:res.data.data.thumb.url,
-            })
+        let postsA = [];
+        let postsB = [];
+        let imgUrls = [];
+        for (const uploadImgInfo of uploadImg.value) {
+          let id = genID();
+          await cutImg(uploadImgInfo.fileUrl, 0.8).then(res => {
+            postsB.push(postImg(res, id + ".jpg", "thumb"));
+            let rawSuffix = uploadImgInfo.file.name.split(".");
+            let name = `${id}.${rawSuffix[rawSuffix.length - 1]}`;
+            postsA.push(postImg(uploadImgInfo.file, name, "raw"));
           });
         }
-         imgUrl.value
+        return await Promise.all(postsA).then(async res => {
+          let p = res;
+          return await Promise.all(postsB).then(res => {
+            res.reduce((pre, value, index) => {
+              if (index === undefined) {
+                return false;
+              }
+              imgUrls.push({raw: "https://" + p[index].Location, thumb: "https://" + value.Location});
+            }, 0);
+            return imgUrls;
+          });
+        });
       }
       else {
         return 0;
       }
     }
-    async function postImg(img) {
-      return await axios.post("https://api.imgbb.com/1/upload", {
-        image: img,
-        key: "0f15cf185d61e22eba6a50f4ee08493f",
-      }, {
-        headers: {
-          "Content-Type": "multipart/form-data"
-        },
-        onUploadProgress: (progressEvent => {
+
+    async function cutImg(img, quality) {
+      let image = new Image();
+      image.src = img;
+      return await new Promise(resolve => {
+        image.onload = () => {
+          let landw = image.height / image.width;
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
+          let width = 400;
+          let height = 400 * landw;
+          canvas.width = width;
+          canvas.height = height;
+          ctx.drawImage(image, 0, 0, width, height);
+          let a = canvas.toDataURL("image/jpeg", quality);
+          resolve(dataURLtoFile(a, `${genID()}.jpg`));
+        };
+      });
+    }
+
+    function dataURLtoFile(url, filename) {
+      let arr = url.split(","), mime = arr[0].match(/:(.*?);/)[1],
+          bstr = atob(arr[1]), i = bstr.length, u8arr = new Uint8Array(i);
+      while (i--) {
+        u8arr[i] = bstr.charCodeAt(i);
+      }
+      return new File([u8arr], filename, {type: mime});
+    }
+
+    function genID(length) {
+      return Number(Math.random().toString().substr(3, 3) + Date.now()).toString(16);
+    }
+
+    async function postImg(img, name, type) {
+      return await cos.putObject({
+        Bucket: "imagehost-1306578662",
+        Region: "ap-beijing",
+        Key: `postImages/${type}/${name}`,
+        Body: img,
+        onProgress: (progressEvent => {
           percent.value = Math.round(progressEvent.loaded * 100 / progressEvent.total);
           if (percent.value > 100) {
             percent.value = 100;
           }
         })
-      })
+      });
     }
-    watch(imgUrl.value,value => {
-      if (imgUrl.value.length===fileUrl.value.length){
-        clear()
-      }
-    })
 
     //图片删除
     function delImg(index) {
-      fileUrl.value.splice(index, 1);
       uploadImg.value.splice(index, 1);
     }
 
     return {
       reset,
       inputFiles,
-      fileUrl,
       getImg,
       delImg,
       percent,
       uploadImg,
       clear,
       ImgSubmit,
-      imgUrl
     };
   },
 
@@ -241,7 +274,7 @@ export default {
   display: flex;
   flex-wrap: wrap;
   padding-bottom: 0.5rem;
-  //justify-content: flex-start;
+  //justify-post: flex-start;
 }
 
 .cancel-btn {

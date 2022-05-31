@@ -84,13 +84,13 @@ export default {
       //从后端获取图片的地址
       request.get("/post",{
         params:{
-          number:0
+          number:0,
+          type:1,
         }
       }).then((res) => {
         res.reduce((total, value) => {
           value.loading = true;
-          value.img=value.img[0].raw
-          console.log(value.img)
+          value.img=value.img[0].thumb
         }, 0);
         spliceImg(res);
       });

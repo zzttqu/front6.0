@@ -14,6 +14,9 @@ request.defaults.retryDelay = 2000;
 let requestList = new Set();
 request.interceptors.request.use(config => {
         config.cancelToken = new axios.CancelToken(e => {
+            if (config.url==='/post/imgkey'){
+                return true;
+            }
             if (!requestList.has(config.url)) {
                 requestList.add(config.url);
             }
